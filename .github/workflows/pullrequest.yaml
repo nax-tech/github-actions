@@ -42,14 +42,10 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-      - uses: de-vri-es/setup-git-credentials@v2
-        with:
-          credentials: https://automation:${{secrets.GITHUB_TOKEN}}@github.com
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
         with:
           terraform_version: ${{ env.TERRAFORM_VERSION }}
-
       - name: Configure AWS credentials for shared services account
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -61,6 +57,15 @@ jobs:
         working-directory: terraform
         run: terraform fmt -check
 
+      - name: Setup SSH
+        env:
+          PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+          ssh-keyscan github.com >> ~/.ssh/known_hosts
+          git config --global url."git@github.com:".insteadOf "https://github.com/"
+          git config --global core.sshCommand "ssh -i $(pwd)/private_key.pem -o IdentitiesOnly=yes"
       - name: Run Terraform init
         id: init
         working-directory: terraform
