@@ -59,10 +59,11 @@ jobs:
 
       - name: Setup SSH
         env:
-          PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          SSH_KEY: ${{ secrets.SSH_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
+          echo "$SSH_KEY" > private_key.pem
           chmod 600 private_key.pem
+          mkdir ~/.ssh
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global url."git@github.com:".insteadOf "https://github.com/"
           git config --global core.sshCommand "ssh -i $(pwd)/private_key.pem -o IdentitiesOnly=yes"
