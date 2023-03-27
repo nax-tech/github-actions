@@ -16,7 +16,7 @@ jobs:
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "matrix<<$EOF" >> $GITHUB_OUTPUT
-          echo "{    \"include\": [ ${ACCOUNT_IDS} ]}"  >> $GITHUB_OUTPUT
+          echo "{    \"include\": ${AWS_MATRIX} }"  >> $GITHUB_OUTPUT
           echo >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT
   jv:
@@ -50,7 +50,7 @@ jobs:
         id: init
         working-directory: terraform
         run: |
-          terraform init -input=false
+          terraform init -input=false --backend-config="bucket=${TF_VAR_state_bucket}" --backend-config="key=${TF_VAR_jv}/terraform.tfstate" --backend-config="region=${TF_VAR_region}"
           terraform workspace list
         env:
           TF_VAR_account_id: ${{ matrix.account_id }}
