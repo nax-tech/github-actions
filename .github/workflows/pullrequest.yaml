@@ -3,6 +3,18 @@ on:
 
 name: Plan Infrastructure
 
+env:
+  TERRAFORM_VERSION: 1.2.9
+  AWS_DEFAULT_REGION: ${{ vars.TF_VAR_REGION}}
+  AWS_REGION: ${{ vars.TF_VAR_REGION}}
+  AWS_DEFAULT_OUTPUT: json
+  GITHUB_TOKEN: ${{ secrets.CIRCLE_CI_GITHUB_TOKEN }}
+  TF_VAR_region: ${{ vars.TF_VAR_REGION}}
+  TF_VAR_jv: ${{ vars.TF_VAR_JV}}
+  TF_VAR_jv_short_name: ${{ vars.TF_VAR_JV_SHORT_NAME }}
+  AWS_MATRIX: ${{ vars.AWS_MATRIX}}
+  TF_VAR_state_bucket: ${{ vars.TF_VAR_STATE_BUCKET }}
+
 jobs:
   load_matrix:
     runs-on: ubuntu-latest
