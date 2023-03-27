@@ -42,7 +42,9 @@ jobs:
     steps:
       - name: Check out repository
         uses: actions/checkout@v2
-
+      - uses: de-vri-es/setup-git-credentials@v2
+        with:
+          credentials: ${{secrets.GITHUB_TOKEN}}
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1.2.1
         with:
