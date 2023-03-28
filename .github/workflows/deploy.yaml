@@ -66,6 +66,8 @@ jobs:
         id: init
         working-directory: terraform
         run: |
+          eval `ssh-agent -s`
+          ssh-add - <<< '${{ secrets.SSH_KEY }}'
           terraform init -input=false --backend-config="bucket=${TF_VAR_state_bucket}" --backend-config="key=${TF_VAR_jv}/terraform.tfstate" --backend-config="region=${TF_VAR_region}"
           terraform workspace new "${{ matrix.env }}" || true
           terraform workspace select "${{ matrix.env }}"
