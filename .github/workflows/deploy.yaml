@@ -1,7 +1,21 @@
 on:
   workflow_call:
+    secrets:
+      SSH_KEY:
+        required: true
 
 name: Deploy Infrastructure
+
+TERRAFORM_VERSION: 1.2.9
+  AWS_DEFAULT_REGION: ${{ vars.TF_VAR_REGION}}
+  AWS_REGION: ${{ vars.TF_VAR_REGION}}
+  AWS_DEFAULT_OUTPUT: json
+  GITHUB_TOKEN: ${{ secrets.CIRCLE_CI_GITHUB_TOKEN }}
+  TF_VAR_region: ${{ vars.TF_VAR_REGION}}
+  TF_VAR_jv: ${{ vars.TF_VAR_JV}}
+  TF_VAR_jv_short_name: ${{ vars.TF_VAR_JV }}
+  AWS_MATRIX: ${{ vars.AWS_MATRIX}}
+  TF_VAR_state_bucket: ${{ vars.TF_VAR_STATE_BUCKET }}
 
 jobs:
   load_matrix:
@@ -52,6 +66,8 @@ jobs:
         working-directory: terraform
         run: |
           terraform init -input=false --backend-config="bucket=${TF_VAR_state_bucket}" --backend-config="key=${TF_VAR_jv}/terraform.tfstate" --backend-config="region=${TF_VAR_region}"
+          terraform workspace new "${{ matrix.env }}" || true
+          terraform workspace select "${{ matrix.env }}"
         env:
           TF_VAR_account_id: ${{ matrix.account_id }}
           TF_VAR_env: ${{ matrix.env }}

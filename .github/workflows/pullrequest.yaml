@@ -34,7 +34,6 @@ jobs:
           echo "{    \"include\": ${AWS_MATRIX} }"  >> $GITHUB_OUTPUT
           echo >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT
-          cat $GITHUB_OUTPUT
   jv:
     needs: load_matrix
     strategy:
