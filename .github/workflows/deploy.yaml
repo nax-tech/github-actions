@@ -67,7 +67,7 @@ jobs:
           terraform workspace new "${{ matrix.env }}" || true
           terraform workspace select "${{ matrix.env }}"
         env:
-          TF_VAR_account_id: ${{ matrix.account_id }}
+          TF_VAR_account_id: ${{ matrix.id }}
           TF_VAR_env: ${{ matrix.env }}
 
       - name: Terraform Validate
@@ -75,7 +75,7 @@ jobs:
         working-directory: terraform
         run: terraform validate -no-color
         env:
-          TF_VAR_account_id: ${{ matrix.account_id }}
+          TF_VAR_account_id: ${{ matrix.id }}
           TF_VAR_env: ${{ matrix.env }}
           TF_WORKSPACE: ${{ matrix.env }}
       - name: Terraform Apply
@@ -85,7 +85,7 @@ jobs:
           terraform workspace list
           terraform apply -auto-approve -input=false
         env:
-          TF_VAR_account_id: ${{ matrix.account_id }}
+          TF_VAR_account_id: ${{ matrix.id }}
           TF_VAR_env: ${{ matrix.env }}
           TF_WORKSPACE: ${{ matrix.env }}
           TF_VAR_sso_url: ${{ secrets.SSO_URL }}
