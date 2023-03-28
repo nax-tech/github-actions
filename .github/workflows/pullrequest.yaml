@@ -68,7 +68,7 @@ jobs:
           cat ~/.ssh/private_key.pem
           git config --global url."git@github.com:".insteadOf "https://github.com/"
           git config --global core.sshCommand "ssh -i ~/.ssh/private_key.pem -o IdentitiesOnly=yes"
-          ssh -i ~/.ssh/argocd -o IdentitiesOnly=yes git@github.com 
+          ssh -i ~/.ssh/private_key.pem -o IdentitiesOnly=yes git@github.com 
           git clone git@github.com:nax-platform/infra-eks.git
       - name: Run Terraform init
         id: init
