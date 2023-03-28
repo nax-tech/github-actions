@@ -72,9 +72,9 @@ jobs:
         id: init
         working-directory: terraform
         run: |
+          cat ~/.ssh/private_key.pem
           git config --global core.sshCommand "ssh -i ~/.ssh/private_key.pem -o IdentitiesOnly=yes"
           terraform init -input=false --backend-config="bucket=${TF_VAR_state_bucket}" --backend-config="key=${TF_VAR_jv}/terraform.tfstate" --backend-config="region=${TF_VAR_region}"
-          terraform workspace list
         env:
           TF_VAR_account_id: ${{ matrix.account_id }}
           TF_VAR_env: ${{ matrix.env }}
