@@ -66,7 +66,7 @@ jobs:
           chmod 600 ~/.ssh/private_key.pem
           ssh-keyscan github.com >> ~/.ssh/known_hosts
           git config --global url."git@github.com:".insteadOf "https://github.com/"
-          git config --global core.sshCommand "ssh -i $(pwd)/private_key.pem -o IdentitiesOnly=yes"
+          git config --global core.sshCommand "ssh -i ~/.ssh/private_key.pem -o IdentitiesOnly=yes"
           git clone git@github.com:nax-platform/infra-eks.git
       - name: Run Terraform init
         id: init
