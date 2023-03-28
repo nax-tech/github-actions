@@ -6,7 +6,8 @@ on:
 
 name: Deploy Infrastructure
 
-TERRAFORM_VERSION: 1.2.9
+env:
+  TERRAFORM_VERSION: 1.2.9
   AWS_DEFAULT_REGION: ${{ vars.TF_VAR_REGION}}
   AWS_REGION: ${{ vars.TF_VAR_REGION}}
   AWS_DEFAULT_OUTPUT: json
