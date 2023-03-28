@@ -83,7 +83,9 @@ jobs:
       - name: Terraform Plan
         id: plan
         working-directory: terraform
-        run: terraform plan -no-color -input=false
+        run: |
+          echo $TF_VAR_account_id
+          terraform plan -no-color -input=false
         env:
           TF_VAR_account_id: ${{ matrix.account_id }}
           TF_VAR_env: ${{ matrix.env }}
