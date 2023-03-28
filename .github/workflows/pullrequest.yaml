@@ -59,21 +59,12 @@ jobs:
         id: fmt
         working-directory: terraform
         run: terraform fmt -check
-
-      - name: Setup SSH
-        env:
-          SSH_KEY: ${{ secrets.SSH_KEY }}
-        run: |
-          mkdir ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/private_key.pem
-          chmod 600 ~/.ssh/private_key.pem
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
       - name: Run Terraform init
         id: init
         working-directory: terraform
         run: |
-          cat ~/.ssh/private_key.pem
-          git config --global core.sshCommand "ssh -i ~/.ssh/private_key.pem -o IdentitiesOnly=yes"
+          eval `ssh-agent -s`
+          ssh-add - <<< '${{ secrets.SSH_KEY }}'
           terraform init -input=false --backend-config="bucket=${TF_VAR_state_bucket}" --backend-config="key=${TF_VAR_jv}/terraform.tfstate" --backend-config="region=${TF_VAR_region}"
         env:
           TF_VAR_account_id: ${{ matrix.account_id }}
