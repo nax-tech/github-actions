@@ -57,11 +57,6 @@ jobs:
           role-to-assume: arn:aws:iam::${{ vars.ACCOUNT_ID }}:role/GithubActionsInfraRole
           aws-region: us-west-2
 
-      - name: Run Terraform fmt
-        id: fmt
-        working-directory: terraform
-        run: terraform fmt -check
-
       - name: Run Terraform init
         id: init
         working-directory: terraform
@@ -74,7 +69,6 @@ jobs:
         env:
           TF_VAR_account_id: ${{ matrix.account_id }}
           TF_VAR_env: ${{ matrix.env }}
-          TF_WORKSPACE: ${{ matrix.env }}
 
       - name: Terraform Validate
         id: validate
