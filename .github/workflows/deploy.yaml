@@ -3,6 +3,10 @@ on:
     secrets:
       SSH_KEY:
         required: true
+      SSO_URL:
+        required: true
+      ARTIFACTORY_DOCKERCONFIG:
+        required: true
 
 name: Deploy Infrastructure
 
