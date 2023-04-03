@@ -74,6 +74,7 @@ jobs:
       - name: Maven Build
         run: |
           echo "github ref: ${{ github.ref }}"
+          echo "github ref env variable ${GITHUB_REF}"
           mkdir artifacts
           mvn -B deploy -Pdocker-deploy
           mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout > artifacts/version
@@ -81,7 +82,7 @@ jobs:
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
           echo "DIGEST=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_ENV
       - name: Trigger Update Image Digest
-        if: github.ref == 'refs/heads/main'
+        if: env.GITHUB_REF == 'refs/heads/main'
         run: |
           echo ${{env.DIGEST}}
           curl -X POST \
