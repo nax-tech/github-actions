@@ -83,9 +83,9 @@ jobs:
         if: ${{ github.ref }} == 'refs/heads/main'
         run: |
           echo ${{env.DIGEST}}
-          echo https://api.github.com/repos/naxa-${{env.TF_VAR_JV}}/.platform/dispatches
+          echo https://api.github.com/repos/naxa-${{vars.TF_VAR_JV}}/.platform/dispatches
           curl -X POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.UPDATE_MANIFEST_TOKEN }}" \
-            https://api.github.com/repos/naxa-${{env.TF_VAR_JV}}/.platform/dispatches \
+            https://api.github.com/repos/naxa-${{vars.TF_VAR_JV}}/.platform/dispatches \
             -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"directory_name\": \"$(basename ${GITHUB_REPOSITORY})\", \"environment_dir\": \"dev\", \"digest\": \"${{env.DIGEST}}\"}}"
