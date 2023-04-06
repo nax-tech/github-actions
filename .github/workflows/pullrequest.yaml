@@ -3,6 +3,12 @@ on:
     secrets:
       SSH_KEY:
         required: true
+      SSO_URL:
+        required: true
+      ARTIFACTORY_DOCKERCONFIG:
+        required: true
+      ARGOCD_CERTIFICATE:
+        required: true
 
 name: Plan Infrastructure
 
@@ -93,6 +99,7 @@ jobs:
           TF_WORKSPACE: ${{ matrix.env }}
           TF_VAR_sso_url: ${{ secrets.SSO_URL }}
           TF_VAR_docker_json_config: ${{ secrets.ARTIFACTORY_DOCKERCONFIG }}
+          TF_VAR_argocd_certificate: ${{ secrets.ARGOCD_CERTIFICATE }}
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
         env:
