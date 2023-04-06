@@ -1,0 +1,65 @@
+name: DEV Environment Build
+
+on:
+  workflow_call:
+    secrets:
+      ARTIFACTORY_USERNAME:
+        required: true
+      ARTIFACTORY_IDENTITY_TOKEN:
+        required: true
+
+jobs:
+  build_and_publish_snapshots:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Configure Maven
+        uses: whelk-io/maven-settings-xml-action@v20
+        with:
+          servers: >
+            [
+              { "id": "central", "username": "${{'{'}}{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{'{'}}{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
+              { "id": "snapshots", "username": "${{'{'}}{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{'{'}}{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
+            ]
+          repositories: >
+            [
+              {
+                "id": "central",
+                "name":  "${{'{'}}{ github.repository_owner }}-libs-release",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-release",
+                "snapshots": { "enabled": "false" }
+              },
+              {
+                "id": "snapshots",
+                "name":  "${{'{'}}{ github.repository_owner }}-libs-snapshot",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-snapshot",
+                "snapshots": { "enabled": "true" }
+              }
+            ]
+          plugin_repositories: >
+            [
+              {
+                "id": "central",
+                "name":  "${{'{'}}{ github.repository_owner }}-libs-release",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-release",
+                "snapshots": { "enabled": "false" }
+              },
+              {
+                "id": "snapshots",
+                "name":  "${{'{'}}{ github.repository_owner }}-libs-snapshot",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-snapshot",
+                "snapshots": { "enabled": "true" }
+              }
+            ]
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'oracle'
+          java-version: '19'
+          cache: 'maven'
+          overwrite-settings: false
+
+      - name: Maven Build
+        run: mvn -B install deploy
