@@ -20,21 +20,21 @@ jobs:
         with:
           servers: >
             [
-              { "id": "central", "username": "${{'{'}}{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{'{'}}{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
-              { "id": "snapshots", "username": "${{'{'}}{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{'{'}}{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
+              { "id": "central", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
+              { "id": "snapshots", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
             ]
           repositories: >
             [
               {
                 "id": "central",
-                "name":  "${{'{'}}{ github.repository_owner }}-libs-release",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-release",
+                "name":  "${{ github.repository_owner }}-libs-release",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
                 "snapshots": { "enabled": "false" }
               },
               {
                 "id": "snapshots",
-                "name":  "${{'{'}}{ github.repository_owner }}-libs-snapshot",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-snapshot",
+                "name":  "${{ github.repository_owner }}-libs-snapshot",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
                 "snapshots": { "enabled": "true" }
               }
             ]
@@ -42,14 +42,14 @@ jobs:
             [
               {
                 "id": "central",
-                "name":  "${{'{'}}{ github.repository_owner }}-libs-release",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-release",
+                "name":  "${{ github.repository_owner }}-libs-release",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
                 "snapshots": { "enabled": "false" }
               },
               {
                 "id": "snapshots",
-                "name":  "${{'{'}}{ github.repository_owner }}-libs-snapshot",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{'{'}}{ github.repository_owner }}-libs-snapshot",
+                "name":  "${{ github.repository_owner }}-libs-snapshot",
+                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
                 "snapshots": { "enabled": "true" }
               }
             ]
