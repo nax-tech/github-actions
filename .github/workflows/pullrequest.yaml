@@ -98,7 +98,7 @@ jobs:
         run: |
           echo $TF_VAR_account_id
           echo $TF_VAR_region
-          terraform plan -no-color -input=false
+          terraform plan -no-color -input=false -var="account_id=${TF_VAR_account_id}"
         env:
           TF_VAR_github_ssh_key: ${{ secrets.SSH_KEY }}
           TF_VAR_account_id: ${{ matrix.id }}
@@ -107,7 +107,6 @@ jobs:
           TF_VAR_sso_url: ${{ secrets.SSO_URL }}
           TF_VAR_docker_json_config: ${{ secrets.ARTIFACTORY_DOCKERCONFIG }}
           TF_VAR_argocd_certificate: ${{ secrets.ARGOCD_CERTIFICATE }}
-          TF_LOG: DEBUG
           TF_VAR_region: ${{ vars.AWS_REGION }}
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
