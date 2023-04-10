@@ -95,7 +95,7 @@ jobs:
         working-directory: terraform
         run: |
           terraform workspace list
-          terraform apply -auto-approve -input=false
+          terraform apply -auto-approve -input=false -refresh=false
         env:
           TF_VAR_github_ssh_key: ${{ secrets.SSH_KEY }}
           TF_VAR_account_id: ${{ matrix.id }}
