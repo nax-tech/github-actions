@@ -18,8 +18,8 @@ name: Plan Infrastructure
 
 env:
   TERRAFORM_VERSION: 1.2.9
-  AWS_DEFAULT_REGION: ${{ vars.TF_VAR_REGION}}
-  AWS_REGION: ${{ vars.TF_VAR_REGION}}
+  AWS_DEFAULT_REGION: ${{ vars.AWS_REGION}}
+  AWS_REGION: ${{ vars.AWS_REGION}}
   AWS_DEFAULT_OUTPUT: json
   GITHUB_TOKEN: ${{ secrets.CIRCLE_CI_GITHUB_TOKEN }}
   TF_VAR_region: ${{ vars.AWS_REGION}}
