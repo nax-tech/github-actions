@@ -63,7 +63,7 @@ jobs:
       - name: Configure AWS credentials for shared services account
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::${{ vars.ACCOUNT_ID }}:role/GithubActionsInfraRole
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/GithubActionsInfraRole
           aws-region: us-west-2
 
       - name: Run Terraform fmt
