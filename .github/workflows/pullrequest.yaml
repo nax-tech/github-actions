@@ -9,6 +9,10 @@ on:
         required: true
       ARGOCD_CERTIFICATE:
         required: true
+      GRAFANA_CLIENT_ID:
+        required: true
+      GRAFANA_CLIENT_SECRET:
+        required: true
 
 name: Plan Infrastructure
 
@@ -23,6 +27,8 @@ env:
   TF_VAR_jv_short_name: ${{ vars.TF_VAR_JV }}
   AWS_MATRIX: ${{ vars.AWS_MATRIX}}
   TF_VAR_state_bucket: ${{ vars.TF_VAR_STATE_BUCKET }}
+  TF_VAR_grafana_client_id: ${{ secrets.GRAFANA_CLIENT_ID }}
+  TF_VAR_grafana_client_secret: ${{ secrets.GRAFANA_CLIENT_SECRET }}
 
 jobs:
   load_matrix:
