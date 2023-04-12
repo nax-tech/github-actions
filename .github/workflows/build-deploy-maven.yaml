@@ -80,7 +80,7 @@ jobs:
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
           echo "DIGEST=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_ENV
       - name: Trigger Update Image Digest
-        if: ${{ github.ref }} == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main'
         run: |
           echo ${{ github.ref }}
           echo ${{env.DIGEST}}
