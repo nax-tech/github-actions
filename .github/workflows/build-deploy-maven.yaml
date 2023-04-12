@@ -82,6 +82,7 @@ jobs:
       - name: Trigger Update Image Digest
         if: ${{ github.ref }} == 'refs/heads/main'
         run: |
+          echo ${{ github.ref }}
           echo ${{env.DIGEST}}
           echo https://api.github.com/repos/naxa-${{vars.TF_VAR_JV}}/.platform/dispatches
           curl -X POST \
