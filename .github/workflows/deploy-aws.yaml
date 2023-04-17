@@ -1,4 +1,3 @@
-# now called deploy-aws.yaml, this copy left for compatibility with older pipelines
 on:
   workflow_call:
     secrets:
