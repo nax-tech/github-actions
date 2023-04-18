@@ -15,6 +15,12 @@ on:
       ARTIFACTORY_REGISTRY:
         required: true
         type: string
+      AWS_ACCOUNT_ID:
+        required: false
+        type: string
+      AWS_TFSTATE_BUCKET:
+        required: false
+        type: string
 
 jobs:
   build-and-publish-snapshots:
