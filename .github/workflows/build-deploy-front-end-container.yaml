@@ -22,6 +22,9 @@ on:
         required: false
         type: string
 
+env:
+  GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
+
 jobs:
   build-and-publish-snapshots:
     runs-on: ubuntu-latest
