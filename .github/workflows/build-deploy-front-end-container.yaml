@@ -9,6 +9,11 @@ on:
         required: true
       UPDATE_MANIFEST_TOKEN:
         required: true
+      NPM_GITHUB_TOKEN:
+        required: true
+    inputs:
+      ARTIFACTORY_REGISTRY:
+        required: true
 
 jobs:
   build-and-publish-snapshots:
