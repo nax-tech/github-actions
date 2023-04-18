@@ -21,7 +21,6 @@ env:
   AWS_DEFAULT_REGION: ${{ vars.AWS_REGION}}
   AWS_REGION: ${{ vars.AWS_REGION}}
   AWS_DEFAULT_OUTPUT: json
-  GITHUB_TOKEN: ${{ secrets.CIRCLE_CI_GITHUB_TOKEN }}
   TF_VAR_region: ${{ vars.AWS_REGION}}
   TF_VAR_jv: ${{ vars.TF_VAR_JV}}
   TF_VAR_jv_short_name: ${{ vars.TF_VAR_JV }}
