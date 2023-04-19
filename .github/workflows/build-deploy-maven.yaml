@@ -13,6 +13,8 @@ on:
 jobs:
   build-and-publish-snapshots:
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.mvn_build.outputs.digest }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -72,21 +74,23 @@ jobs:
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
 
       - name: Maven Build
+        id: mvn_build
         run: |
           mkdir artifacts
           mvn -B deploy -Pdocker-deploy
           mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout > artifacts/version
           echo $(basename ${GITHUB_REPOSITORY})
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
-          echo "DIGEST=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_ENV
+          echo "digest=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_OUTPUT
+
       - name: Trigger Update Image Digest
         if: github.ref == 'refs/heads/main'
         run: |
           echo ${{ github.ref }}
-          echo ${{env.DIGEST}}
+          echo ${{ steps.mvn_build.outputs.digest }}
           echo https://api.github.com/repos/naxa-${{vars.TF_VAR_JV}}/.platform/dispatches
           curl -X POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.UPDATE_MANIFEST_TOKEN }}" \
             https://api.github.com/repos/naxa-${{vars.TF_VAR_JV}}/.platform/dispatches \
-            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"directory_name\": \"$(basename ${GITHUB_REPOSITORY})\", \"environment_dir\": \"dev\", \"digest\": \"${{env.DIGEST}}\"}}"
+            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"directory_name\": \"$(basename ${GITHUB_REPOSITORY})\", \"environment_dir\": \"dev\", \"digest\": \"${{ steps.mvn_build.outputs.digest }}\"}}"
