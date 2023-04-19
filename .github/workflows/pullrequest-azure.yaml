@@ -27,7 +27,6 @@ env:
 
 jobs:
   jv:
-    needs: load_matrix
     strategy:
       fail-fast: true
       max-parallel: 1
