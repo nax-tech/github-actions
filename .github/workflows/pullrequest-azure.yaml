@@ -13,6 +13,8 @@ on:
         required: true
       GRAFANA_CLIENT_SECRET:
         required: true
+      AZURE_SECRETS_MATRIX:
+        required: true
 
 name: Plan Infrastructure
 
