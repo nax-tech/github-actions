@@ -22,9 +22,8 @@ on:
         required: false
         type: string
       github-token:
-        required: false
+        required: true
         type: string
-        default: ${{ secrets.GITHUB_TOKEN }}
 
 env:
   GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
