@@ -21,14 +21,10 @@ on:
       AWS_TFSTATE_BUCKET:
         required: false
         type: string
-      githubToken:
-        required: false
-        type: string
-        value: ${{ secrets.GITHUB_TOKEN }}
       github-token:
         required: false
         type: string
-        value: ${{ secrets.GITHUB_TOKEN }}
+        default: ${{ secrets.GITHUB_TOKEN }}
 
 env:
   GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
