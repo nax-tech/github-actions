@@ -87,11 +87,23 @@ jobs:
           echo "Affected applications: $APPS"
           echo "AFFECTED_APPS=$(echo $APPS)" >> $GITHUB_ENV
 
-      - name: Deploy
+      - name: Build and push docker image
         run: |
           for APP in $AFFECTED_APPS
           do
             INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
+          done
+
+      - name: Artifactory notification
+        run: |
+          for APP in $AFFECTED_APPS
+          do
             UPDATE_MANIFEST_TOKEN=${{ secrets.UPDATE_MANIFEST_TOKEN }} pnpm nx release $APP
+          done
+
+      - name: Invalidate CloudFront
+        run: |
+          for APP in $AFFECTED_APPS
+          do
             pnpm nx invalidate $APP
           done
