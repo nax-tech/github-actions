@@ -31,7 +31,7 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        data: ${{ fromJson(vars.AZURE_MATRIX) }}
+        data: ${{ fromJson(secrets.AZURE_SECRETS_MATRIX) }}
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository
