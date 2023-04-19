@@ -21,9 +21,6 @@ on:
       AWS_TFSTATE_BUCKET:
         required: false
         type: string
-      github-token:
-        required: true
-        type: string
 
 env:
   GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
@@ -100,7 +97,7 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
+            INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
             UPDATE_MANIFEST_TOKEN=${{ secrets.UPDATE_MANIFEST_TOKEN }} pnpm nx release $APP
             pnpm nx invalidate $APP
           done
