@@ -93,7 +93,7 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            pnpm nx deploy $APP
+            GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
             UPDATE_MANIFEST_TOKEN=${{ secrets.UPDATE_MANIFEST_TOKEN }} pnpm nx release $APP
             pnpm nx invalidate $APP
           done
