@@ -89,10 +89,6 @@ jobs:
           echo "Affected applications: $APPS"
           echo "AFFECTED_APPS=$(echo $APPS)" >> $GITHUB_ENV
 
-      - name: Test docker
-        run: |
-          docker build -t test-image -f apps/webapp/Dockerfile .
-
       - name: Deploy
         run: |
           for APP in $AFFECTED_APPS
