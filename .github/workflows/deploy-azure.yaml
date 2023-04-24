@@ -13,6 +13,10 @@ on:
         required: true
       GRAFANA_CLIENT_SECRET:
         required: true
+      ARM_CLIENT_ID:
+        required: true
+      ARM_CLIENT_SECRET:
+        required: true
 
 name: Deploy Azure Infrastructure
 
