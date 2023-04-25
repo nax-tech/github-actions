@@ -40,7 +40,7 @@ jobs:
       fail-fast: true
       max-parallel: 1
       matrix:
-        include: ${{ fromJson(secrets.AZURE_MATRIX) }}
+        include: ${{ fromJson(vars.AZURE_MATRIX) }}
     env:
       ARM_SUBSCRIPTION_ID: ${{ matrix.subscription_id }}
       TF_VAR_environment: ${{ matrix.environment }}
