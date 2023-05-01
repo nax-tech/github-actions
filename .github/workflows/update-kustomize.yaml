@@ -3,6 +3,9 @@ name: Update Image Digest
 on:
   workflow_call:
 
+permissions:
+  contents: write
+
 jobs:
   update-image-digest:
     concurrency: update-kustomization
