@@ -3,15 +3,18 @@ name: DEV Environment Build
 on:
   workflow_call:
     secrets:
+      ARTIFACTORY_TOKEN:
+        required: true
       ARTIFACTORY_USERNAME:
         required: true
       ARTIFACTORY_IDENTITY_TOKEN:
         required: true
       UPDATE_MANIFEST_TOKEN:
         required: true
-      NPM_GITHUB_TOKEN:
-        required: true
     inputs:
+      REACT_APP_ENV:
+        required: false
+        type: string
       ARTIFACTORY_REGISTRY:
         required: true
         type: string
@@ -23,7 +26,12 @@ on:
         type: string
 
 env:
-  GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+  UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
+  ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+  REACT_APP_ENV: ${{ inputs.ARTIFACTORY_TOKEN }}
+  ARTIFACTORY_REGISTRY: ${{ inputs.ARTIFACTORY_REGISTRY }}
 
 jobs:
   build-and-publish-snapshots:
