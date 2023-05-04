@@ -5,6 +5,7 @@ on:
     inputs:
       REACT_APP_ENV:
         required: false
+        type: string
     secrets:
       ARTIFACTORY_TOKEN:
         required: true
