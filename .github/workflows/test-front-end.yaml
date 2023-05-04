@@ -3,11 +3,11 @@ name: Test
 on:
   workflow_call:
     secrets:
-      NPM_GITHUB_TOKEN:
+      ARTIFACTORY_TOKEN:
         required: true
 
 env:
-  GITHUB_TOKEN: ${{ secrets.NPM_GITHUB_TOKEN }}
+  ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
 
 jobs:
   test:
