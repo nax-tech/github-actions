@@ -114,7 +114,7 @@ jobs:
           for APP in $AFFECTED_APPS
           do
             pnpm nx deploy $APP
-            echo "${{ APP }}_digest=$(cat .nx-container/$APP/digest)" >> "$GITHUB_OUTPUT"
+            echo "${APP}_digest=$(cat .nx-container/$APP/digest)" >> "$GITHUB_OUTPUT"
           done
           
 
