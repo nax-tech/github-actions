@@ -118,6 +118,7 @@ jobs:
       - name: Image build outputs
         run: |
           echo "${{ steps.build_image.outputs }}"
+          echo $(node -e "console.log(JSON.stringify(${{ steps.build_image.outputs }}))")
 
       - name: Artifactory notification
         run: |
