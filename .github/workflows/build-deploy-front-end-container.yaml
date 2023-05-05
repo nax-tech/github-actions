@@ -111,10 +111,14 @@ jobs:
       - name: Build and push docker image
         id: build_image
         run: |
-          NX_BUILD_OUTPUT=$(pnpm nx deploy website)
-          echo "--------------------------------"
-          echo $NX_BUILD_OUTPUT
-          echo "--------------------------------"
+          for APP in $AFFECTED_APPS
+          do
+            NX_BUILD_OUTPUT=$(pnpm nx deploy $APP)
+            echo $NX_BUILD_OUTPUT >> $GITHUB_OUTPUT
+            echo "--------------------------------"
+            echo $NX_BUILD_OUTPUT
+            echo "--------------------------------"            
+          done
 
       - name: Image build outputs
         run: |
