@@ -118,7 +118,7 @@ jobs:
 
       - name: Image build outputs
         run: |
-          echo "${{ steps.build_image.outputs }}"
+          echo "${{ steps.build_image.outputs.Digest }}"
 
       - name: Artifactory notification
         run: |
