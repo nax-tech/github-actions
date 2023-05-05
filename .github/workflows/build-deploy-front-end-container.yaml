@@ -116,16 +116,28 @@ jobs:
           done
           echo "--------------------------------"
           echo "${{ steps.build_image.outputs }}"
+          echo "--------------------------------"
           echo "${{ steps.build_image.outputs.digest }}"
-          echo $(node -e "console.log(JSON.stringify(${{ steps.build_image.outputs }}))")
+          echo "--------------------------------"
+          echo "${{ steps.build_image.outputs.Digest }}"
+          echo "--------------------------------"
+          echo "${{ steps.build_image.outputs.output.Digest }}"
+          echo "--------------------------------"
+          echo "${{ steps.build_image.outputs.output.digest }}"
+          echo "--------------------------------"
 
       - name: Image build outputs
         run: |
           echo "${{ steps.build_image.outputs }}"
+          echo "--------------------------------"
           echo "${{ steps.build_image.outputs.digest }}"
+          echo "--------------------------------"
           echo "${{ steps.build_image.outputs.Digest }}"
+          echo "--------------------------------"
           echo "${{ steps.build_image.outputs.output.Digest }}"
+          echo "--------------------------------"
           echo "${{ steps.build_image.outputs.output.digest }}"
+          echo "--------------------------------"
 
       - name: Artifactory notification
         run: |
