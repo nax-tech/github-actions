@@ -110,10 +110,7 @@ jobs:
       - name: Build and push docker image
         id: build_image
         run: |
-          for APP in $AFFECTED_APPS
-          do
-            INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
-          done
+          pnpm nx deploy website
           echo "--------------------------------"
           echo "${{ steps.build_image.outputs }}"
           echo "--------------------------------"
