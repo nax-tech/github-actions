@@ -114,6 +114,9 @@ jobs:
             INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
           done
 
+      - name: Image build outputs
+        run: echo ${{steps.build_image.outputs}}
+
       - name: Artifactory notification
         run: |
           for APP in $AFFECTED_APPS
