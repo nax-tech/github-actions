@@ -112,7 +112,7 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} echo $(pnpm nx deploy $APP) >> "$GITHUB_OUTPUT"
+            echo $(INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP) >> "$GITHUB_OUTPUT"
           done
 
       - name: Image build outputs
