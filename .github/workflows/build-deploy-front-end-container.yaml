@@ -115,7 +115,7 @@ jobs:
           do
             pnpm nx deploy $APP
           done
-          ls -l
+          ls -la
 
       - name: Image build outputs
         run: |
