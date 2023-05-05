@@ -112,6 +112,7 @@ jobs:
           TF_VAR_region: ${{ vars.AWS_REGION }}
       - uses: actions/github-script@v6
         if: github.event_name == 'pull_request'
+        continue-on-error: true
         env:
           PLAN: "terraform\n${{ steps.plan.outputs.stdout }}"
         with:
