@@ -108,14 +108,17 @@ jobs:
           echo "AFFECTED_APPS=$(echo $APPS)" >> $GITHUB_ENV
 
       - name: Build and push docker image
+        id: build_image
         run: |
           for APP in $AFFECTED_APPS
           do
             INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
           done
+        outputs:
+          container-digest: ${{ steps.build_image.outputs.Digest }}
 
       - name: Image build outputs
-        run: echo ${{steps.build_image}}
+        run: echo ${{steps.build_image.outputs.container-digest}}
 
       - name: Artifactory notification
         run: |
