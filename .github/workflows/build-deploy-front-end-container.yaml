@@ -114,7 +114,7 @@ jobs:
           for APP in $AFFECTED_APPS
           do
             pnpm nx deploy $APP
-            echo "$APP_digest=$(cat .nx-container/$APP/digest)" >> "$GITHUB_OUTPUT"
+            echo "${{ APP }}_digest=$(cat .nx-container/$APP/digest)" >> "$GITHUB_OUTPUT"
           done
           
 
@@ -122,7 +122,7 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            echo "${{ steps.build_image.outputs.$APP_digest }}"
+            echo "${{ steps.build_image.outputs.website_digest }}"
           done
 
       - name: Artifactory notification
