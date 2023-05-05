@@ -115,7 +115,8 @@ jobs:
           do
             pnpm nx deploy $APP
           done
-          cd .nx-container/website && ls -la
+          echo "$(cat .nx-container/website/digest)"
+          cd .nx-container/website/digest && ls -la
 
       - name: Image build outputs
         run: |
