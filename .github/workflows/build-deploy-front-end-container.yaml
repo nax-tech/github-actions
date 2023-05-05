@@ -111,17 +111,9 @@ jobs:
       - name: Build and push docker image
         id: build_image
         run: |
-          pnpm nx deploy website
+          NX_BUILD_OUTPUT=$(pnpm nx deploy website)
           echo "--------------------------------"
-          echo "${{ steps.build_image.outputs }}"
-          echo "--------------------------------"
-          echo "${{ steps.build_image.outputs.digest }}"
-          echo "--------------------------------"
-          echo "${{ steps.build_image.outputs.Digest }}"
-          echo "--------------------------------"
-          echo "${{ steps.build_image.outputs.output.Digest }}"
-          echo "--------------------------------"
-          echo "${{ steps.build_image.outputs.output.digest }}"
+          echo $NX_BUILD_OUTPUT
           echo "--------------------------------"
 
       - name: Image build outputs
