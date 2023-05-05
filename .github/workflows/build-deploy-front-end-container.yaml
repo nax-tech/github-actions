@@ -113,14 +113,13 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            NX_OUTPUT=$(pnpm nx deploy $APP)
-            echo "NX_BUILD_OUTPUT=$NX_OUTPUT" >> "$GITHUB_OUTPUT"
+            pnpm nx deploy $APP
           done
+          ls -l
 
       - name: Image build outputs
         run: |
-          echo "--------------------------------"
-          echo "${{ steps.build_image.outputs.NX_BUILD_OUTPUT }}"
+          echo "${{ steps.build_image.outputs }}"
           echo "--------------------------------"
 
       - name: Artifactory notification
