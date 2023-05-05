@@ -115,7 +115,7 @@ jobs:
           done
 
       - name: Image build outputs
-        run: echo ${{steps.build_image.outputs}}
+        run: echo ${{steps.build_image}}
 
       - name: Artifactory notification
         run: |
