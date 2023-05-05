@@ -114,7 +114,11 @@ jobs:
           do
             INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP
           done
-
+          echo "--------------------------------"
+          echo "${{ steps.build_image.outputs }}"
+          echo "${{ steps.build_image.outputs.digest }}"
+          echo $(node -e "console.log(JSON.stringify(${{ steps.build_image.outputs }}))")
+          
       - name: Image build outputs
         run: |
           echo "${{ steps.build_image.outputs }}"
