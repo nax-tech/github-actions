@@ -112,11 +112,16 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            echo "::set-output name=full-output::$(INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP)"
+            echo "full-output=$(INPUT_GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} pnpm nx deploy $APP)" >> $GITHUB_OUTPUT
+            echo "short-output=123" >> $GITHUB_OUTPUT
           done
+          echo "${{ steps.build_image.outputs.full-output }}"
+          echo "${{ steps.build_image.outputs.short-output }}"
 
       - name: Image build outputs
-        run: echo "${{ steps.build_image.outputs.full-output }}"
+        run: |
+          echo "${{ steps.build_image.outputs.full-output }}"
+          echo "${{ steps.build_image.outputs.short-output }}"
 
       - name: Artifactory notification
         run: |
