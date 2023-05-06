@@ -121,8 +121,7 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            OUTPUT_NAME="${APP}_digest"
-            echo "${{ steps.build_image.outputs[$OUTPUT_NAME] }}"
+            echo "${{ steps.build_image.outputs[format('{0}_digest', $APP)] }}"
           done
 
       - name: Artifactory notification
