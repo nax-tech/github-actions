@@ -12,13 +12,13 @@ on:
       UPDATE_MANIFEST_TOKEN:
         required: true
       CONTENTFUL_ACCESS_TOKEN:
-        required: true
+        required: false
       CONTENTFUL_PREVIEW_ACCESS_TOKEN:
-        required: true
+        required: false
       CONTENTFUL_SPACE_ID:
-        required: true
+        required: false
       CONTENTFUL_ENVIRONMENT_ID:
-        required: true
+        required: false
     inputs:
       REACT_APP_ENV:
         required: false
@@ -40,10 +40,10 @@ env:
   ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
   REACT_APP_ENV: ${{ inputs.ARTIFACTORY_TOKEN }}
   ARTIFACTORY_REGISTRY: ${{ inputs.ARTIFACTORY_REGISTRY }}
-  CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
-  CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
-  CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
-  CONTENTFUL_ENVIRONMENT_ID: ${{ secrets.CONTENTFUL_ENVIRONMENT_ID }}
+  CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN || '' }}
+  CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN || '' }}
+  CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID || '' }}
+  CONTENTFUL_ENVIRONMENT_ID: ${{ secrets.CONTENTFUL_ENVIRONMENT_ID || '' }}
   INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
