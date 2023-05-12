@@ -96,6 +96,24 @@ jobs:
           TF_VAR_account_id: ${{ matrix.id }}
           TF_VAR_env: ${{ matrix.env }}
           TF_WORKSPACE: ${{ matrix.env }}
+      - name: Terraform Import
+        id: import
+        working-directory: terraform
+        run: |
+          terraform import "module.jv_infra.module.irsa_external_dns.kubernetes_namespace_v1.irsa[0]" external-dns
+          terraform import "module.jv_infra.module.irsa_karpenter.kubernetes_namespace_v1.irsa[0]" karpenter
+          terraform import "module.jv_infra.module.irsa_external_dns.kubernetes_service_account_v1.irsa[0]" external-dns/external-dns
+          terraform import "module.jv_infra.module.irsa_karpenter.kubernetes_service_account_v1.irsa[0]" karpenter/karpenter
+        env:
+          TF_VAR_github_ssh_key: ${{ secrets.SSH_KEY }}
+          TF_VAR_account_id: ${{ matrix.id }}
+          TF_VAR_env: ${{ matrix.env }}
+          TF_VAR_jv_name: ${{ vars.TF_VAR_JV_NAME}}
+          TF_VAR_jv_project: ${{ vars.TF_VAR_JV_PROJECT }}
+          TF_WORKSPACE: ${{ matrix.env }}
+          TF_VAR_sso_url: ${{ secrets.SSO_URL }}
+          TF_VAR_docker_json_config: ${{ secrets.ARTIFACTORY_DOCKERCONFIG }}
+          TF_VAR_argocd_certificate: ${{ secrets.ARGOCD_CERTIFICATE }}
       - name: Terraform Apply
         id: apply
         working-directory: terraform
