@@ -100,10 +100,10 @@ jobs:
         id: import
         working-directory: terraform
         run: |
-          terraform import "module.jv_infra.module.irsa_external_dns.kubernetes_namespace_v1.irsa[0]" external-dns
-          terraform import "module.jv_infra.module.irsa_karpenter.kubernetes_namespace_v1.irsa[0]" karpenter
-          terraform import "module.jv_infra.module.irsa_external_dns.kubernetes_service_account_v1.irsa[0]" external-dns/external-dns
-          terraform import "module.jv_infra.module.irsa_karpenter.kubernetes_service_account_v1.irsa[0]" karpenter/karpenter
+          terraform import "module.jv_infra.module.irsa_external_dns.kubernetes_namespace_v1.irsa[0]" external-dns || true
+          terraform import "module.jv_infra.module.irsa_karpenter.kubernetes_namespace_v1.irsa[0]" karpenter || true
+          terraform import "module.jv_infra.module.irsa_external_dns.kubernetes_service_account_v1.irsa[0]" external-dns/external-dns || true
+          terraform import "module.jv_infra.module.irsa_karpenter.kubernetes_service_account_v1.irsa[0]" karpenter/karpenter || true
         env:
           TF_VAR_github_ssh_key: ${{ secrets.SSH_KEY }}
           TF_VAR_account_id: ${{ matrix.id }}
