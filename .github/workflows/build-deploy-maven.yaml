@@ -78,9 +78,7 @@ jobs:
       - name: If not main branch, append branch name to version
         if: github.ref != 'refs/heads/main'
         run: |
-          echo "${{ toJSON(github.context) }}"
           value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "$value"
           echo "$value-${GITHUB_REF#refs/heads/}"
           mvn versions:set -DnewVersion=$value-${GITHUB_REF#refs/heads/} -DgenerateBackupPoms=false
 
