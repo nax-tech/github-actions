@@ -79,7 +79,7 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: |
           value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "$value-${GITHUB_REF#refs/heads/}"
+          echo "value=$value-${GITHUB_REF#refs/heads/}"
           mvn versions:set -DnewVersion=$value-${GITHUB_REF#refs/heads/} -DgenerateBackupPoms=false
 
       - name: Maven Build
@@ -91,10 +91,12 @@ jobs:
           echo $(basename ${GITHUB_REPOSITORY})
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
           echo "digest=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_OUTPUT
+          echo "version=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
       - name: Update summary
         run: |
           echo "Docker image digest: ${{ steps.mvn_build.outputs.digest }}" >> $GITHUB_STEP_SUMMARY
+          echo "Maven version: ${{ steps.mvn_build.outputs.version }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Trigger Update Image Digest
         if: github.ref == 'refs/heads/main'
