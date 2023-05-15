@@ -127,9 +127,3 @@ jobs:
               -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"directory_name\": \"$(basename ${GITHUB_REPOSITORY})-apps-$APP\", \"resource_directory_name\": \"$(basename ${GITHUB_REPOSITORY})/apps/$APP\", \"image_name\": \"fe-$APP\", \"environment_dir\": \"dev\", \"digest\": \"$(cat .nx-container/$APP/digest)\"}}"
             rm -rf .nx-container
           done
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          role-to-assume: arn:aws:iam::${{ inputs.account_id }}:role/${{ inputs.aws_role_name }}
-          aws-region: ${{ env.AWS_REGION }}
