@@ -19,6 +19,10 @@ on:
         required: false
       CONTENTFUL_ENVIRONMENT_ID:
         required: false
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
     inputs:
       REACT_APP_ENV:
         required: false
@@ -32,19 +36,27 @@ on:
       AWS_TFSTATE_BUCKET:
         required: false
         type: string
+      AWS_REGION:
+        required: false
+        type: string
 
 env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
   UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
   ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
-  REACT_APP_ENV: ${{ inputs.ARTIFACTORY_TOKEN }}
+  REACT_APP_ENV: ${{ inputs.REACT_APP_ENV }}
   ARTIFACTORY_REGISTRY: ${{ inputs.ARTIFACTORY_REGISTRY }}
   CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN || '' }}
   CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN || '' }}
   CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID || '' }}
   CONTENTFUL_ENVIRONMENT_ID: ${{ secrets.CONTENTFUL_ENVIRONMENT_ID || '' }}
   INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
+  AWS_REGION: ${{ inputs.AWS_REGION }}
+  AWS_DEFAULT_OUTPUT: json
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
 jobs:
   build-and-publish-snapshots:
