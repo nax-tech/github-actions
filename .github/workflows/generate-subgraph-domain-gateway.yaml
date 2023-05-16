@@ -4,12 +4,6 @@ on:
       APPLICATION_IMAGE:
         required: true
         type: string
-      APPLICATION_SERVER_PORT:
-        required: true
-        type: number
-      APPLICATION_HEALTH_PORT:
-        required: true
-        type: number
     secrets:
       SUBGRAPH_PULL_TOKEN:
         required: true
@@ -28,12 +22,15 @@ jobs:
     services:
       application:
         image: ${{ inputs.APPLICATION_IMAGE }}
+        env:
+          SERVER_PORT: "8080" # Service Port
+          MANAGEMENT_SERVER_PORT: "8081" # Management Port
         credentials:
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
         ports:
-          - ${{ inputs.APPLICATION_SERVER_PORT }}:${{ inputs.APPLICATION_SERVER_PORT }}
-          - ${{ inputs.APPLICATION_HEALTH_PORT }}:${{ inputs.APPLICATION_HEALTH_PORT }}
+          - 8080:8080
+          - 8081:8081
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -50,7 +47,7 @@ jobs:
         run: |
           ATTEMPT_COUNTER=0
           MAX_ATTEMPTS=12
-          while ! curl --silent --fail localhost:${{ inputs.APPLICATION_HEALTH_PORT }}/health; do
+          while ! curl --silent --fail localhost:8081/health; do
             if [ ${ATTEMPT_COUNTER} -ge ${MAX_ATTEMPTS} ];then
               echo "Max attempts reached, service did not come up in time please check your docker image."
               echo "Try running this command locally to see why the application failed to start:"
@@ -67,7 +64,7 @@ jobs:
       - name: Generate Rover Subgraph
         id: generate_subgraph
         run: |
-          rover subgraph introspect http://127.0.0.1:${{ inputs.APPLICATION_SERVER_PORT }}/graphql > ${{ github.event.repository.name }}.graphql
+          rover subgraph introspect http://localhost:8080/graphql > ${{ github.event.repository.name }}.graphql
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "subgraph<<$EOF" >> $GITHUB_OUTPUT
           echo "$(cat './${{ github.event.repository.name }}.graphql')"  >> $GITHUB_OUTPUT
