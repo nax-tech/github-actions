@@ -8,9 +8,10 @@ permissions:
 
 jobs:
   update-image-digest:
-    concurrency: update-kustomization
     runs-on: ubuntu-latest
-
+    concurrency:
+      group: update-kustomization
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
