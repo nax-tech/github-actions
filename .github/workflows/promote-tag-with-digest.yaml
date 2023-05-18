@@ -49,6 +49,8 @@ jobs:
 
       - name: Trigger update-digest
         run: |
+          echo "${{ github.event.repository.name }}"
+
           github-actions/.github/workflows/trigger-action.sh \
             --org ${{vars.TF_VAR_JV_PROJECT}}-${{vars.TF_VAR_JV_NAME}} \
             --repo .platform \
