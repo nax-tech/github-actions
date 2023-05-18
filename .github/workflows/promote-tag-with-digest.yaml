@@ -4,10 +4,6 @@ on:
       TOKEN:
         required: true
     inputs:
-      application-name:
-        description: 'Used to determine the .platform folder to use (under .platform/kubernetes)'
-        type: string
-        required: true
       target-env:
         description: 'Target environment (stg, prd)'
         type: string
@@ -49,14 +45,12 @@ jobs:
 
       - name: Trigger update-digest
         run: |
-          echo "${{ github.event.repository.name }}"
-
           github-actions/.github/workflows/trigger-action.sh \
             --org ${{vars.TF_VAR_JV_PROJECT}}-${{vars.TF_VAR_JV_NAME}} \
             --repo .platform \
             --event_type update-digest \
             --token ${{ secrets.TOKEN }} \
-            --client_payload "{\"directory_name\": \"${{ inputs.application-name }}\", \"environment_dir\": \"${{ inputs.target-env }}\", \"digest\": \"${{ steps.get_release.outputs.digest }}\"}"
+            --client_payload "{\"directory_name\": \"${{ github.event.repository.name }}\", \"environment_dir\": \"${{ inputs.target-env }}\", \"digest\": \"${{ steps.get_release.outputs.digest }}\"}"
 
       - name: Update github release
         env:
