@@ -93,7 +93,7 @@ jobs:
           git tag -a ${{ steps.TAG.outputs.tag_name }} -m "Release ${{ steps.TAG.outputs.value }}"
           git push origin ${{ steps.TAG.outputs.tag_name }}
 
-      - name: Maven Build
+      - name: Maven Build - Tag
         id: mvn_build
         run: |
           mvn -B deploy -Pdocker-deploy
@@ -111,7 +111,7 @@ jobs:
           mvn versions:set -DnextSnapshot -DnextSnapshotIndexToIncrement=${{ steps.SNAPSHOT_INCREMENT_INDEX.outputs.value }} -DgenerateBackupPoms=false
           echo "value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
 
-      - name: Maven Build - Tag
+      - name: Maven Build - Snapshot
         id: mvn_build_snapshot
         run: |
           mvn -B deploy -Pdocker-deploy
@@ -128,7 +128,7 @@ jobs:
 
       - name: Prepare Artifact
         run: |
-          echo "${{ steps.TAG.outputs.digest}}" >> digest.txt
+          echo "${{ steps.mvn_build.outputs.digest }}" >> digest.txt
 
       - uses: ncipollo/release-action@v1.12.0
         with:
@@ -140,4 +140,4 @@ jobs:
           generateReleaseNotes: true
           body: |
             Maven version: `${{ steps.TAG.outputs.value }}`
-            Docker image digest: `${{ steps.TAG.outputs.digest }}`
+            Docker image digest: `${{ steps.mvn_build.outputs.digest }}`
