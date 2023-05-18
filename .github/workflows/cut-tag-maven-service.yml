@@ -132,8 +132,8 @@ jobs:
 
       - uses: ncipollo/release-action@v1.12.0
         with:
-          name: Version ${{ needs.tag_version.outputs.value }}
-          tag: ${{ needs.tag_version.outputs.tag_name }}
+          name: Version ${{ steps.TAG.outputs.value }}
+          tag: ${{ steps.TAG.outputs.tag_name }}
           makeLatest: true
           artifacts: "digest.txt"
           removeArtifacts: true
