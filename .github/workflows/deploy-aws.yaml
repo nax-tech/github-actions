@@ -13,6 +13,8 @@ on:
         required: true
       GRAFANA_CLIENT_SECRET:
         required: true
+      TERRAFORM_ARGS:
+        required: false
 
 name: Deploy Infrastructure
 
@@ -106,7 +108,7 @@ jobs:
           echo var project ${{ vars.TF_VAR_JV_PROJECT }}
           echo var name ${{ vars.TF_VAR_JV_NAME }} 
           terraform workspace list
-          terraform apply -auto-approve -input=false -refresh=false
+          terraform apply -auto-approve -input=false -refresh=false ${{ inputs.TERRAFORM_ARGS }}
         env:
           TF_VAR_github_ssh_key: ${{ secrets.SSH_KEY }}
           TF_VAR_account_id: ${{ matrix.id }}
