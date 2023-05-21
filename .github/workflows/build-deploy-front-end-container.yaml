@@ -57,6 +57,7 @@ env:
   AWS_DEFAULT_OUTPUT: json
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  NODE_OPTIONS: "--max_old_space_size=4096"
 
 jobs:
   build-and-publish-snapshots:
