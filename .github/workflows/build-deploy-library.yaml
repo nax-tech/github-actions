@@ -75,4 +75,4 @@ jobs:
         run: |
           value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)
           mvn -B install deploy
-          echo "Maven version: ${{ value }}" >> $GITHUB_STEP_SUMMARY
+          echo "Maven version: $value" >> $GITHUB_STEP_SUMMARY
