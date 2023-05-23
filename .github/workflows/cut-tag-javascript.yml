@@ -37,11 +37,82 @@ jobs:
           registry: naxgrp.jfrog.io
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
-
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      
+      - name: Setup NodeJS 16
+        uses: actions/setup-node@v1
         with:
-          node-version: 18
+          node-version: 16
+      
+      - name: Install pnpm
+        run: npm install -g pnpm
 
-      - name: Install Semver
-        run: echo $NX_APP
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir-path
+        run: echo "::set-output name=dir::$(pnpm config get cacheFolder)"
+      
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v2
+        id: pnpm-cache
+        with:
+          path: |
+            ${{ steps.pnpm-cache-dir-path.outputs.dir }}
+            **\node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        run: pnpm install
+
+      - name: Raise version of app
+        run: |
+          echo "Raise versions of: $NX_APP"
+          pnpm nx version $NX_APP
+          npm version minor --no-git-tag-version --no-push
+
+      - name: get-npm-version
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Push changes
+        run: |
+          git fetch
+          git add --all
+          git commit -m "Release version ${{ steps.package-version.outputs.current-version }}"
+          git push
+
+      - name: Tag release
+        run: |
+          git tag -a v${{ steps.package-version.outputs.current-version }} -m "tag release v${{ steps.package-version.outputs.current-version }}"
+          git push --follow-tags
+
+      - name: Build apps
+        run: |
+          pnpm nx build $NX_APP
+
+      - name: Build and push docker image
+        id: build_image
+        run: |
+          pnpm nx deploy $NX_APP
+
+      - name: Record Summary
+        run: |
+          echo "### Docker Tags" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
+
+      # - name: Prepare Artifact
+      #   run: |
+      #     echo "${{ steps.build-push.outputs.digest }}" >> digest.txt
+
+      # - uses: ncipollo/release-action@v1.12.0
+      #   with:
+      #     name: Version ${{ steps.TAG.outputs.value }}
+      #     tag: ${{ steps.TAG.outputs.tag_name }}
+      #     makeLatest: true
+      #     artifacts: "digest.txt"
+      #     removeArtifacts: true
+      #     generateReleaseNotes: true
+      #     body: |
+      #       Docker Digest: `${{ steps.build-push.outputs.digest }}`
+      #       Docker Tags: `${{ steps.meta.outputs.tags }}`
