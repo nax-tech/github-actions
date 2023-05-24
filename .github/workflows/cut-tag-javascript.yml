@@ -127,7 +127,7 @@ jobs:
 
       - uses: ncipollo/release-action@v1.12.0
         with:
-          name: "$NX_APP_${{ steps.TAG.outputs.value }}"
+          name: "$NX_APP\_${{ steps.TAG.outputs.value }}"
           tag: ${{ steps.TAG.outputs.tag_name }}
           makeLatest: true
           artifacts: "digest.txt"
