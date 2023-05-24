@@ -85,9 +85,6 @@ jobs:
       - name: Install dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
         run: pnpm install
-
-      - name: Install Semver
-        run: npm install -g semver
       
       - name: Get Tag Version
         id: TAG
@@ -130,7 +127,7 @@ jobs:
 
       - uses: ncipollo/release-action@v1.12.0
         with:
-          name: Version ${{ steps.TAG.outputs.value }}
+          name: "$NX_APP_${{ steps.TAG.outputs.value }}"
           tag: ${{ steps.TAG.outputs.tag_name }}
           makeLatest: true
           artifacts: "digest.txt"
@@ -138,4 +135,3 @@ jobs:
           generateReleaseNotes: true
           body: |
             Docker Digest: `${{ steps.build_image.outputs.digest }}`
-            Docker Tags: `${{ steps.TAG.outputs.tag_name }}`
