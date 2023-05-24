@@ -124,7 +124,7 @@ jobs:
       - name: Build and push docker image
         id: build_image
         run: |
-          VERSION=${{ steps.TAG.outputs.tag_name }} pnpm nx deploy $NX_APP
+          VERSION="raw,value=${{ steps.TAG.outputs.tag_name }}" pnpm nx deploy $NX_APP
           echo "$(cat .nx-container/$NX_APP/digest)" >> digest.txt
           echo "digest=$(cat .nx-container/$NX_APP/digest)" >> $GITHUB_OUTPUT
 
