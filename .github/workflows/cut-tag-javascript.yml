@@ -78,6 +78,8 @@ jobs:
       - name: Push changes
         run: |
           git fetch
+          git config user.email "github@naxgrp.com"
+          git config user.name "Github CI"
           git add --all
           git commit -m "Release version ${{ steps.package-version.outputs.current-version }}"
           git push
