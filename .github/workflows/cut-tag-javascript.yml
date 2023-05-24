@@ -89,29 +89,25 @@ jobs:
       - name: Get Tag Version
         id: TAG
         run: |
-          cd apps/$NX_APP && version=$(npm version minor --no-git-tag-version --no-push) && cd ../..
-          echo "value=$version"
-          echo "value=$version" >> $GITHUB_OUTPUT
-          echo "tag_name=$version"
-          echo "tag_name=$version" >> $GITHUB_OUTPUT
-          npm version minor --no-git-tag-version --no-push
-
-      - name: get-npm-version
-        id: package-version
-        uses: martinbeentjes/npm-get-version-action@master
-
+          cd apps/$NX_APP && app_version=$(npm version minor --no-git-tag-version --no-push) && cd ../..
+          code_version=$(npm version minor --no-git-tag-version --no-push)
+          echo "${{ inputs.NX_APP }}: $app_version"
+          echo "Code version: ${{ inputs.NX_APP }}_$code_version"
+          echo "app_version=$app_version" >> $GITHUB_OUTPUT
+          echo "code_version=${{ inputs.NX_APP }}_$code_version" >> $GITHUB_OUTPUT
+          
       - name: Push changes
         run: |
           git fetch
           git config user.email "github@naxgrp.com"
           git config user.name "Github CI"
           git add --all
-          git commit -m "Release version ${{ steps.package-version.outputs.current-version }}"
+          git commit -m "Release version ${{ steps.TAG.outputs.code_version }}"
           git push
 
       - name: Tag release
         run: |
-          git tag -a ${{ steps.package-version.outputs.current-version }} -m "tag release ${{ steps.package-version.outputs.current-version }}"
+          git tag -a ${{ steps.TAG.outputs.code_version }} -m "tag release ${{ steps.TAG.outputs.code_version }}"
           git push --follow-tags
 
       - name: Build apps
@@ -121,17 +117,19 @@ jobs:
       - name: Build and push docker image
         id: build_image
         run: |
-          VERSION="raw,value=${{ steps.TAG.outputs.tag_name }}" pnpm nx deploy $NX_APP
+          pnpm nx deploy $NX_APP
           echo "$(cat .nx-container/$NX_APP/digest)" >> digest.txt
+          echo $NX_APP >> app.txt
           echo "digest=$(cat .nx-container/$NX_APP/digest)" >> $GITHUB_OUTPUT
 
       - uses: ncipollo/release-action@v1.12.0
         with:
-          name: "$NX_APP\_${{ steps.TAG.outputs.value }}"
-          tag: ${{ steps.TAG.outputs.tag_name }}
+          name: "${{ steps.TAG.outputs.code_version }}"
+          tag: ${{ steps.TAG.outputs.code_version }}
           makeLatest: true
-          artifacts: "digest.txt"
+          artifacts: "digest.txt,app.txt"
           removeArtifacts: true
           generateReleaseNotes: true
           body: |
+            App: `${{ inputs.NX_APP }}`
             Docker Digest: `${{ steps.build_image.outputs.digest }}`
