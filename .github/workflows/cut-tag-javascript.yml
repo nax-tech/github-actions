@@ -90,11 +90,11 @@ jobs:
         id: TAG
         run: |
           cd apps/$NX_APP && app_version=$(npm version minor --no-git-tag-version --no-push) && cd ../..
-          code_version=$(npm version minor --no-git-tag-version --no-push)
+          npm version minor --no-git-tag-version --no-push
           echo "${{ inputs.NX_APP }}: $app_version"
-          echo "Code version: ${{ inputs.NX_APP }}_$code_version"
+          echo "Code version: ${{ inputs.NX_APP }}_$app_version"
           echo "app_version=$app_version" >> $GITHUB_OUTPUT
-          echo "code_version=${{ inputs.NX_APP }}_$code_version" >> $GITHUB_OUTPUT
+          echo "code_version=${{ inputs.NX_APP }}_$app_version" >> $GITHUB_OUTPUT
           
       - name: Push changes
         run: |
