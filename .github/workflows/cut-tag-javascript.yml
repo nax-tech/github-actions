@@ -121,8 +121,7 @@ jobs:
       - name: Build and push docker image
         id: build_image
         run: |
-          rm -rf .nx-container
-          pnpm nx deploy $NX_APP --skip-nx-cache
+          pnpm nx deploy $NX_APP
           echo "$(cat .nx-container/$NX_APP/digest)" >> digest.txt
           echo $NX_APP >> app.txt
           echo "digest=$(cat .nx-container/$NX_APP/digest)" >> $GITHUB_OUTPUT
