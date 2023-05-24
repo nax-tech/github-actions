@@ -88,11 +88,11 @@ jobs:
 
       - name: Install Semver
         run: npm install -g semver
-
+      
       - name: Get Tag Version
         id: TAG
         run: |
-          cd apps/$NX_APP && version=$(semver -i patch $(git tag | grep -E '^v*$' | tail -n1) || echo "1.0.0") && cd ../..
+          cd apps/$NX_APP && version=$(npm version minor --no-git-tag-version --no-push) && cd ../..
           echo "value=$version"
           echo "value=$version" >> $GITHUB_OUTPUT
           echo "tag_name=v$version"
