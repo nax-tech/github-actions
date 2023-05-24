@@ -95,8 +95,8 @@ jobs:
           cd apps/$NX_APP && version=$(npm version minor --no-git-tag-version --no-push) && cd ../..
           echo "value=$version"
           echo "value=$version" >> $GITHUB_OUTPUT
-          echo "tag_name=v$version"
-          echo "tag_name=v$version" >> $GITHUB_OUTPUT
+          echo "tag_name=$version"
+          echo "tag_name=$version" >> $GITHUB_OUTPUT
           npm version minor --no-git-tag-version --no-push
 
       - name: get-npm-version
