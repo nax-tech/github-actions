@@ -92,13 +92,11 @@ jobs:
       - name: Get Tag Version
         id: TAG
         run: |
-          cd apps/$NX_APP
-          version=$(semver -i patch $(git tag | grep -E '^v*$' | tail -n1) || echo "1.0.0")
+          cd apps/$NX_APP && version=$(semver -i patch $(git tag | grep -E '^v*$' | tail -n1) || echo "1.0.0") && cd ../..
           echo "value=$version"
           echo "value=$version" >> $GITHUB_OUTPUT
           echo "tag_name=v$version"
           echo "tag_name=v$version" >> $GITHUB_OUTPUT
-          cd ../..
           npm version minor --no-git-tag-version --no-push
 
       - name: get-npm-version
