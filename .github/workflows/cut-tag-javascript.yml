@@ -114,7 +114,7 @@ jobs:
 
       - name: Tag release
         run: |
-          git tag -a v${{ steps.package-version.outputs.current-version }} -m "tag release v${{ steps.package-version.outputs.current-version }}"
+          git tag -a ${{ steps.package-version.outputs.current-version }} -m "tag release ${{ steps.package-version.outputs.current-version }}"
           git push --follow-tags
 
       - name: Build apps
