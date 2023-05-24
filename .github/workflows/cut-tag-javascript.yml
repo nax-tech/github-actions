@@ -13,10 +13,12 @@ on:
         required: true
 
 env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
   ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
   NX_APP: ${{ inputs.NX_APP }}
+  NODE_OPTIONS: --max_old_space_size=4096
 
 jobs:
   tag_version:
@@ -65,10 +67,19 @@ jobs:
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
         run: pnpm install
 
-      - name: Raise version of app
+      - name: Install Semver
+        run: npm install -g semver
+
+      - name: Get Tag Version
+        id: TAG
         run: |
-          echo "Raise versions of: $NX_APP"
-          pnpm nx version $NX_APP
+          cd apps/$NX_APP
+          version=$(semver -i patch $(git tag | grep -E '^v*$' | tail -n1) || echo "1.0.0")
+          echo "value=$version"
+          echo "value=$version" >> $GITHUB_OUTPUT
+          echo "tag_name=v$version"
+          echo "tag_name=v$version" >> $GITHUB_OUTPUT
+          cd ../..
           npm version minor --no-git-tag-version --no-push
 
       - name: get-npm-version
@@ -97,24 +108,17 @@ jobs:
         id: build_image
         run: |
           pnpm nx deploy $NX_APP
+          echo "$(cat .nx-container/$NX_APP/digest)" >> digest.txt
+          echo "digest=$(cat .nx-container/$NX_APP/digest)" >> $GITHUB_OUTPUT
 
-      - name: Record Summary
-        run: |
-          echo "### Docker Tags" >> $GITHUB_STEP_SUMMARY
-          echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
-
-      # - name: Prepare Artifact
-      #   run: |
-      #     echo "${{ steps.build-push.outputs.digest }}" >> digest.txt
-
-      # - uses: ncipollo/release-action@v1.12.0
-      #   with:
-      #     name: Version ${{ steps.TAG.outputs.value }}
-      #     tag: ${{ steps.TAG.outputs.tag_name }}
-      #     makeLatest: true
-      #     artifacts: "digest.txt"
-      #     removeArtifacts: true
-      #     generateReleaseNotes: true
-      #     body: |
-      #       Docker Digest: `${{ steps.build-push.outputs.digest }}`
-      #       Docker Tags: `${{ steps.meta.outputs.tags }}`
+      - uses: ncipollo/release-action@v1.12.0
+        with:
+          name: Version ${{ steps.TAG.outputs.value }}
+          tag: ${{ steps.TAG.outputs.tag_name }}
+          makeLatest: true
+          artifacts: "digest.txt"
+          removeArtifacts: true
+          generateReleaseNotes: true
+          body: |
+            Docker Digest: `${{ steps.build_image.outputs.digest }}`
+            Docker Tags: `${{ steps.TAG.outputs.tag_name }}`
