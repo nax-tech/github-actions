@@ -126,7 +126,7 @@ jobs:
         run: |
           for APP in $AFFECTED_APPS
           do
-            pnpm nx deploy $APP
+            VERSION="schedule" pnpm nx deploy $APP
             echo "------------------------------"
             echo "Trigger Update Image Digest..."
             echo "Github ref: ${{ github.ref }}"
