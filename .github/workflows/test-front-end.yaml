@@ -8,7 +8,7 @@ on:
         type: string
     secrets:
       ARTIFACTORY_TOKEN:
-        required: true
+        required: false
       CONTENTFUL_ACCESS_TOKEN:
         required: false
       CONTENTFUL_PREVIEW_ACCESS_TOKEN:
@@ -63,7 +63,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        run: pnpm install
+        run: ARTIFACTORY_TOKEN=$(echo -n "$ARTIFACTORY_USERNAME:$ARTIFACTORY_IDENTITY_TOKEN" | base64) && pnpm install
 
       - name: Fetch main
         run: git fetch origin main
