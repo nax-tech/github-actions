@@ -7,6 +7,10 @@ on:
         required: false
         type: string
     secrets:
+      ARTIFACTORY_USERNAME:
+        required: false
+      ARTIFACTORY_IDENTITY_TOKEN:
+        required: false
       ARTIFACTORY_TOKEN:
         required: false
       CONTENTFUL_ACCESS_TOKEN:
