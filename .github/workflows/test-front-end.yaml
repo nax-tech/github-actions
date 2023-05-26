@@ -20,7 +20,7 @@ on:
 
 env:
   REACT_APP_ENV: ${{ inputs.REACT_APP_ENV }}
-  ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+  ARTIFACTORY_TOKEN: $(echo -n "$ARTIFACTORY_USERNAME:$ARTIFACTORY_IDENTITY_TOKEN" | base64)
   CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN }}
   CONTENTFUL_PREVIEW_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_PREVIEW_ACCESS_TOKEN }}
   CONTENTFUL_SPACE_ID: ${{ secrets.CONTENTFUL_SPACE_ID }}
@@ -63,7 +63,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        run: ARTIFACTORY_TOKEN=$(echo -n "$ARTIFACTORY_USERNAME:$ARTIFACTORY_IDENTITY_TOKEN" | base64) && pnpm install
+        run: pnpm install
 
       - name: Fetch main
         run: git fetch origin main
