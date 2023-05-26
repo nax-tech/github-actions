@@ -4,7 +4,7 @@ on:
   workflow_call:
     secrets:
       ARTIFACTORY_TOKEN:
-        required: true
+        required: false
       ARTIFACTORY_USERNAME:
         required: true
       ARTIFACTORY_IDENTITY_TOKEN:
@@ -93,7 +93,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
-        run: pnpm install
+        run: ARTIFACTORY_TOKEN=$(echo -n "$ARTIFACTORY_USERNAME:$ARTIFACTORY_IDENTITY_TOKEN" | base64) && pnpm install
 
       - name: Test
         run: |
