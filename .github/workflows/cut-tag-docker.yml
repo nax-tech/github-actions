@@ -5,6 +5,10 @@ on:
         required: true
       ARTIFACTORY_IDENTITY_TOKEN:
         required: true
+    outputs:
+      digest:
+        description: "The docker image digest for the built image"
+        value: ${{ steps.build-push.outputs.digest }}
 
 jobs:
   tag_version:

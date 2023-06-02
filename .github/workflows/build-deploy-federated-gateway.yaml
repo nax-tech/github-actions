@@ -13,10 +13,10 @@ on:
         required: true
       UPDATE_MANIFEST_TOKEN:
         required: true
-#    outputs:
-#      digest:
-#        description: "The docker image digest for the built image"
-#        value: ${{ jobs.build-and-publish-snapshots.outputs.digest }}
+    outputs:
+      digest:
+        description: "The docker image digest for the built image"
+        value: ${{ steps.build-push.outputs.digest }}
 
 jobs:
   find_subgraphs:
