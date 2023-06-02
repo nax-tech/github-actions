@@ -8,7 +8,10 @@ on:
     outputs:
       digest:
         description: "The docker image digest for the built image"
-        value: ${{ steps.build-push.outputs.digest }}
+        value: ${{ jobs.tag_version.outputs.digest }}
+      tag_name:
+        description: "Git Tag Name"
+        value: ${{ jobs.tag_version.outputs.tag_name }}
 
 jobs:
   tag_version:
@@ -17,6 +20,7 @@ jobs:
     outputs:
       tag_name: ${{ steps.TAG.outputs.tag_name }}
       tag_value: ${{ steps.TAG.outputs.value }}
+      digest: ${{ steps.build-push.outputs.digest }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3

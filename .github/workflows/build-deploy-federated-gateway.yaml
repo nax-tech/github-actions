@@ -16,7 +16,7 @@ on:
     outputs:
       digest:
         description: "The docker image digest for the built image"
-        value: ${{ steps.build-push.outputs.digest }}
+        value: ${{ jobs.build_supergraph.outputs.digest }}
 
 jobs:
   find_subgraphs:
@@ -73,6 +73,8 @@ jobs:
   build_supergraph:
     needs: collect_subgraphs
     runs-on: ubuntu-latest
+    outputs:
+      digest: ${{ steps.build-push.outputs.digest }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
