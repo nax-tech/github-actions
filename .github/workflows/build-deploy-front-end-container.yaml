@@ -1,4 +1,4 @@
-name: DEV Environment Build
+name: Dev Build & Deploy
 
 on:
   workflow_call:
