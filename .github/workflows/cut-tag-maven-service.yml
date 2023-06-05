@@ -8,10 +8,10 @@ on:
     outputs:
       digest:
         description: "The docker image digest for the built image"
-        value: ${{ jobs.mvn_build.outputs.digest }}
+        value: ${{ jobs.tag_version.outputs.digest }}
       tag_name:
         description: "Git Tag Name"
-        value: ${{ jobs.TAG.outputs.tag_name }}
+        value: ${{ jobs.tag_version.outputs.tag_name }}
 
 jobs:
   tag_version:
