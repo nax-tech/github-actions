@@ -5,6 +5,10 @@ on:
         required: true
       ARTIFACTORY_IDENTITY_TOKEN:
         required: true
+    outputs:
+      tag_name:
+        description: "Git Tag Name"
+        value: ${{ jobs.tag_version.outputs.tag_name }}
 
 jobs:
   tag_version:
@@ -12,7 +16,6 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag_name: ${{ steps.TAG.outputs.tag_name }}
-      tag_value: ${{ steps.TAG.outputs.value }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3

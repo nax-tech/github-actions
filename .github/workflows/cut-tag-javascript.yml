@@ -24,6 +24,10 @@ on:
       ARTIFACTORY_REGISTRY:
         required: true
         type: string
+    outputs:
+      tag_name:
+        description: "Git Tag Name"
+        value: ${{ jobs.tag_version.outputs.tag_name }}
 
 env:
   NX_APP: ${{ inputs.NX_APP }}
@@ -44,8 +48,7 @@ jobs:
     name: Create Tag & Build
     runs-on: ubuntu-latest
     outputs:
-      tag_name: ${{ steps.TAG.outputs.tag_name }}
-      tag_value: ${{ steps.TAG.outputs.value }}
+      tag_name: ${{ steps.TAG.outputs.code_version }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
