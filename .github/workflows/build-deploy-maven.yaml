@@ -94,13 +94,11 @@ jobs:
       - name: If not main branch, append branch name to version
         if: github.ref != 'refs/heads/main'
         run: |
-          set +x
           value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)
           branch_name="${GITHUB_REF#refs/heads/}"
           branch_name_formatted=$(echo "${branch_name}" | sed 's/[\\\/\:\"\<\>\|\?\*]/-/g')
           echo "value=$value-${branch_name_formatted}"
           mvn versions:set -DnewVersion=$value-${branch_name_formatted} -DgenerateBackupPoms=false
-          set -x
 
       - name: Maven Build
         id: mvn_build
