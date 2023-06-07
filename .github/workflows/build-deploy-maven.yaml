@@ -75,6 +75,10 @@ jobs:
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
 
+      - name: Maven Dependency Tree
+        run: |
+          mvn dependency:tree
+
       - name: If not main branch, append branch name to version
         if: github.ref != 'refs/heads/main'
         run: |

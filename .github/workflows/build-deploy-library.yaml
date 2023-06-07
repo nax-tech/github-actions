@@ -61,6 +61,10 @@ jobs:
           cache: 'maven'
           overwrite-settings: false
 
+      - name: Maven Dependency Tree
+        run: |
+          mvn dependency:tree
+
       - name: If not main branch, append branch name to version
         if: github.ref != 'refs/heads/main'
         run: |

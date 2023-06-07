@@ -67,6 +67,10 @@ jobs:
           cache: 'maven'
           overwrite-settings: false
 
+      - name: Maven Dependency Tree
+        run: |
+          mvn dependency:tree
+
       - name: Get Tag Version
         id: TAG
         run: |

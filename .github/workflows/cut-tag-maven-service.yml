@@ -82,6 +82,10 @@ jobs:
       - name: Remove snapshot version
         run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
 
+      - name: Maven Dependency Tree
+        run: |
+          mvn dependency:tree
+
       - name: Get TAG version
         id: TAG
         run: |
