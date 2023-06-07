@@ -26,13 +26,13 @@ jobs:
         with:
           servers: >
             [
-              { "id": "central", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
+              { "id": "releases", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
               { "id": "snapshots", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
             ]
           repositories: >
             [
               {
-                "id": "central",
+                "id": "releases",
                 "name":  "${{ github.repository_owner }}-libs-release",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
                 "snapshots": { "enabled": "false" }
@@ -47,7 +47,7 @@ jobs:
           plugin_repositories: >
             [
               {
-                "id": "central",
+                "id": "releases",
                 "name":  "${{ github.repository_owner }}-libs-release",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
                 "snapshots": { "enabled": "false" }
