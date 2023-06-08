@@ -1,5 +1,8 @@
 on:
   workflow_call:
+    secrets:
+      ARTIFACTORY_TOKEN:
+        required: true
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -17,6 +20,7 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   STORYBOOK_BASE_PATH: /component-library
   NODE_OPTIONS: --max_old_space_size=4096
+  ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
 
 jobs:
   deploy:
