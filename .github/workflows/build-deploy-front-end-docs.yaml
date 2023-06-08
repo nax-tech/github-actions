@@ -69,7 +69,9 @@ jobs:
         run: pnpm nx build storybook --skip-nx-cache
 
       - name: Prepare Pages
-        run: ./.github/scripts/pages.sh
+        run: |
+          chmod +x .github/scripts/pages.sh
+          ./.github/scripts/pages.sh
         shell: bash
 
       - name: Setup Pages
