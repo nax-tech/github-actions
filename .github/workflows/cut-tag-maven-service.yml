@@ -30,37 +30,41 @@ jobs:
         with:
           servers: >
             [
-              { "id": "central", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
+              { "id": "releases", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
               { "id": "snapshots", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
             ]
           repositories: >
             [
               {
-                "id": "central",
+                "id": "releases",
                 "name":  "${{ github.repository_owner }}-libs-release",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                "snapshots": { "enabled": "false" }
+                "snapshots": { "enabled": "false" },
+                "releases": { "enabled": "true" }
               },
               {
                 "id": "snapshots",
                 "name":  "${{ github.repository_owner }}-libs-snapshot",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                "snapshots": { "enabled": "true" }
+                "snapshots": { "enabled": "true" },
+                "releases": { "enabled": "false" }
               }
             ]
           plugin_repositories: >
             [
               {
-                "id": "central",
+                "id": "releases",
                 "name":  "${{ github.repository_owner }}-libs-release",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                "snapshots": { "enabled": "false" }
+                "snapshots": { "enabled": "false" },
+                "releases": { "enabled": "true" }
               },
               {
                 "id": "snapshots",
                 "name":  "${{ github.repository_owner }}-libs-snapshot",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                "snapshots": { "enabled": "true" }
+                "snapshots": { "enabled": "true" },
+                "releases": { "enabled": "false" }
               }
             ]
 
@@ -78,6 +82,10 @@ jobs:
           registry: naxgrp.jfrog.io
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+
+      - name: Maven Dependency Tree
+        run: |
+          mvn dependency:tree
 
       - name: Remove snapshot version
         run: mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
