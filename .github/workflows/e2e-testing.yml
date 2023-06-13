@@ -11,6 +11,10 @@ on:
         required: true
       UPDATE_MANIFEST_TOKEN:
         required: true
+      TESTRAIL_USERNAME:
+        required: true
+      TESTRAIL_PASSWORD:
+        required: true
     inputs:
       environment:
         description: 'environment'
@@ -27,6 +31,8 @@ env:
   ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
   UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
   ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+  TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+  TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD }}
 
 jobs:
   test-build:
