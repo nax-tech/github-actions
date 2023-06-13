@@ -10,19 +10,12 @@ on:
         description: 'environment'
         required: true
         default: 'local_dev'
-        type: choice
-        options:
-          - local_dev
-          - dev
-          - qa
+        type: string
       app:
         description: 'application'
         required: true
         default: 'webapp-e2e'
-        type: choice
-        options:
-          - webapp-e2e
-          - website-e2e
+        type: string
 
 jobs:
   test-build:
