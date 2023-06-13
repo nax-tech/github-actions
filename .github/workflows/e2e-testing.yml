@@ -9,6 +9,8 @@ on:
         required: true
       ARTIFACTORY_IDENTITY_TOKEN:
         required: true
+      UPDATE_MANIFEST_TOKEN:
+        required: true
     inputs:
       environment:
         description: 'environment'
