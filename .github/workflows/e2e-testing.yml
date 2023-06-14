@@ -26,6 +26,10 @@ on:
         required: true
         default: 'webapp-e2e'
         type: string
+      specs:
+        description: 'cypress specs'
+        required: false
+        type: string
 env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
@@ -40,6 +44,7 @@ jobs:
     env:
       ENV: ${{ github.event.inputs.environment || 'local_dev' }}
       APP: ${{ github.event.inputs.app || 'webapp-e2e' }}
+      SPECS: ${{ github.event.inputs.specs || '' }}
     steps:
       - run:  env
       - name: Checkout
@@ -84,14 +89,14 @@ jobs:
         run: pnpm install
 
       - name: E2E Tests DEV local
-        if: ${{ env.ENV == 'local_dev' }}
+        if: ${{ env.ENV == 'local_dev' && env.SPECS ==''}}
         env:
           CYPRESS_ENVIRONMENT: 'dev'
         run: |
           RUN=CI pnpm nx e2e-parallel-local $APP --skip-nx-cache
 
       - name: E2E Tests DEV
-        if: ${{ env.ENV == 'dev' }}
+        if: ${{ env.ENV == 'dev' && env.SPECS =='' }}
         env:
           CYPRESS_BASE_URL: 'https://d3npzvqlsc8z51.cloudfront.net/'
           CYPRESS_ENVIRONMENT: 'dev'
@@ -99,12 +104,20 @@ jobs:
           RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
 
       - name: E2E Tests QA
-        if: ${{ env.ENV == 'qa' }}
+        if: ${{ env.ENV == 'qa' && env.SPECS =='' }}
         env:
           CYPRESS_BASE_URL: 'https://d3npzvqlsc8z51.cloudfront.net/'
           CYPRESS_ENVIRONMENT: 'qa'
         run: |
           RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
+
+      - name: E2E Tests Smoke Dev Local
+        if: ${{ env.ENV == 'local_dev' && env.SPECS !='' }}
+        env:
+          CYPRESS_ENVIRONMENT: 'dev'
+          ARGS: env.SPECS
+        run: |
+          RUN=CI pnpm nx e2e-single-local $APP --skip-nx-cache
 
       - name: Merge test results into one
         run: |
