@@ -37,14 +37,12 @@ env:
   ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
   TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
   TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD }}
-
+  ENV: ${{ inputs.environment || 'local_dev' }}
+  APP: ${{ inputs.app || 'webapp-e2e' }}
+  SPECS: ${{ inputs.specs || '' }}
 jobs:
   test-build:
     runs-on: ubuntu-latest
-    env:
-      ENV: ${{ github.event.inputs.environment || 'local_dev' }}
-      APP: ${{ github.event.inputs.app || 'webapp-e2e' }}
-      SPECS: ${{ github.event.inputs.specs || '' }}
     steps:
       - run:  env
       - name: Checkout
