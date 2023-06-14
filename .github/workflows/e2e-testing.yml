@@ -113,7 +113,7 @@ jobs:
         if: ${{ env.ENV == 'local_dev' && env.SPECS !='' }}
         env:
           CYPRESS_ENVIRONMENT: 'dev'
-          ARGS: env.SPECS
+          ARGS: ${{env.SPECS}}
         run: |
           RUN=CI pnpm nx e2e-single-local $APP --skip-nx-cache
 
