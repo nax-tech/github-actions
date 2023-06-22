@@ -125,6 +125,12 @@ jobs:
       - name: Generate HTML report
         run: pnpm run report:generate
 
+      - name: Archive code coverage results
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: public
+
       - name: Python setup
         if: always()
         uses: actions/setup-python@v3
