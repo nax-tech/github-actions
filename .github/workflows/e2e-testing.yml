@@ -118,14 +118,17 @@ jobs:
           RUN=CI pnpm nx e2e-single-local $APP --skip-nx-cache
 
       - name: Merge test results into one
+        if: always()
         run: |
           pnpm run report:merge
           pnpm run report:merge-junit
 
       - name: Generate HTML report
+        if: always()
         run: pnpm run report:generate
 
       - name: Archive code coverage results
+        if: always()
         uses: actions/upload-artifact@v3
         with:
           name: test-report
