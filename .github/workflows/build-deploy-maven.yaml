@@ -78,6 +78,10 @@ jobs:
       - name: If not main branch, append branch name to version
         if: github.ref != 'refs/heads/main'
         run: |
+          echo "dry run"
+          mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout
+
+          echo "setting value"
           value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)
           echo "$value"
           branch_name="${GITHUB_REF#refs/heads/}"
