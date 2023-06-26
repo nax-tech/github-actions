@@ -35,13 +35,15 @@ jobs:
                 "id": "central",
                 "name":  "${{ github.repository_owner }}-libs-release",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                "snapshots": { "enabled": "false" }
+                "snapshots": { "enabled": "false" },
+                "releases": { "enabled": "true" }
               },
               {
                 "id": "snapshots",
                 "name":  "${{ github.repository_owner }}-libs-snapshot",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                "snapshots": { "enabled": "true" }
+                "snapshots": { "enabled": "true" },
+                "releases": { "enabled": "false" }
               }
             ]
           plugin_repositories: >
@@ -50,13 +52,15 @@ jobs:
                 "id": "central",
                 "name":  "${{ github.repository_owner }}-libs-release",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                "snapshots": { "enabled": "false" }
+                "snapshots": { "enabled": "false" },
+                "releases": { "enabled": "true" }
               },
               {
                 "id": "snapshots",
                 "name":  "${{ github.repository_owner }}-libs-snapshot",
                 "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                "snapshots": { "enabled": "true" }
+                "snapshots": { "enabled": "true" },
+                "releases": { "enabled": "false" }
               }
             ]
 
