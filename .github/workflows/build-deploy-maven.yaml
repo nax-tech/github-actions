@@ -79,8 +79,11 @@ jobs:
         if: github.ref != 'refs/heads/main'
         run: |
           value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "$value"
           branch_name="${GITHUB_REF#refs/heads/}"
+          echo "$branch_name"
           branch_name_formatted=$(echo "${branch_name}" | sed 's/[\\\/\:\"\<\>\|\?\*]/-/g')
+          echo "$branch_name_formatted"
           echo "value=$value-${branch_name_formatted}"
           mvn versions:set -DnewVersion=$value-${branch_name_formatted} -DgenerateBackupPoms=false
 
