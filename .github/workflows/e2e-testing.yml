@@ -104,7 +104,7 @@ jobs:
       - name: E2E Tests QA
         if: ${{ env.ENV == 'qa' && env.SPECS =='' }}
         env:
-          CYPRESS_BASE_URL: 'https://d3npzvqlsc8z51.cloudfront.net/'
+          CYPRESS_BASE_URL: 'https://webapp.us-west-2.stg.watercolor.naxgrp.com/'
           CYPRESS_ENVIRONMENT: 'qa'
         run: |
           RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
