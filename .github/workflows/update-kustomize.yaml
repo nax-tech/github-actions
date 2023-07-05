@@ -37,4 +37,4 @@ jobs:
           git commit -m "[skip ci] Update ${{ github.event.client_payload.directory_name }} image digest to ${{ github.event.client_payload.digest }}"
           git push origin main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
