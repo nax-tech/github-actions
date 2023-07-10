@@ -45,7 +45,7 @@ jobs:
       - name: Get Tag Version
         id: TAG
         run: |
-          version=$(semver -i patch $(git tag | grep -E 'v*$' | tail -n1) || echo "1.0.0")
+          version=$(semver -i patch $(git tag | grep -E 'v*$' | sort -t "." -k1,1n -k2,2n -k3,3n | tail -n1) || echo "1.0.0")
           echo "value=$version"
           echo "value=$version" >> $GITHUB_OUTPUT
           echo "tag_name=v$version"
