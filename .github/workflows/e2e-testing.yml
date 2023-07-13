@@ -30,6 +30,11 @@ on:
         description: 'cypress specs'
         required: false
         type: string
+      run_name:
+        description: 'TestRail run name'
+        default: 'Automated Tests from GitHub workflow'
+        required: true
+        type: string
 env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
@@ -40,6 +45,7 @@ env:
   ENV: ${{ inputs.environment || 'local_dev' }}
   APP: ${{ inputs.app || 'webapp-e2e' }}
   SPECS: ${{ inputs.specs || '' }}
+  RUN_NAME: ${{ inputs.run_name || 'Automated Tests from GitHub workflow' }}
 jobs:
   test-build:
     runs-on: ubuntu-latest
@@ -150,7 +156,7 @@ jobs:
             --password ${{ secrets.TESTRAIL_PASSWORD }} \
             parse_junit \
             --case-matcher "name" \
-            --title "Automated Tests from GitHub workflow" \
+            --title "$RUN_NAME" \
             --close-run \
             --run-description ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
             --file "apps/webapp-e2e/results/combined-report.xml"
