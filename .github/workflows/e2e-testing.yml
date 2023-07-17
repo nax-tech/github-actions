@@ -140,24 +140,24 @@ jobs:
           name: test-report
           path: public
 
-#      - name: Python setup
-#        if: always()
-#        uses: actions/setup-python@v3
-#        with:
-#          python-version: '3.x'
-#      - name: TestRail CLI upload results
-#        if: always()
-#        run: |
-#          pip install trcli
-#          trcli -n \
-#            -h https://naxgrp.testrail.io/ \
-#            --project "naxa-watercolor" \
-#            --username ${{ secrets.TESTRAIL_USERNAME }} \
-#            --password ${{ secrets.TESTRAIL_PASSWORD }} \
-#            parse_junit \
-#            --case-matcher "name" \
-#            --title "$RUN_NAME" \
-#            --close-run \
-#            --run-description ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
-#            --file "apps/webapp-e2e/results/combined-report.xml"
+      - name: Python setup
+        if: always()
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+      - name: TestRail CLI upload results
+        if: always()
+        run: |
+          pip install trcli
+          trcli -n \
+            -h https://naxgrp.testrail.io/ \
+            --project "naxa-watercolor" \
+            --username ${{ secrets.TESTRAIL_USERNAME }} \
+            --password ${{ secrets.TESTRAIL_PASSWORD }} \
+            parse_junit \
+            --case-matcher "name" \
+            --title "$RUN_NAME" \
+            --close-run \
+            --run-description ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
+            --file "apps/webapp-e2e/results/combined-report.xml"
 
