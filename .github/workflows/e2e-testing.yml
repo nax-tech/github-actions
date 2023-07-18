@@ -15,6 +15,18 @@ on:
         required: true
       TESTRAIL_PASSWORD:
         required: true
+      CYPRESS_DEV_CLIENT_SECRET:
+        required: true
+      CYPRESS_DEV_CLIENT_ID:
+        required: true
+      CYPRESS_QA_CLIENT_SECRET:
+        required: true
+      CYPRESS_QA_CLIENT_ID:
+        required: true
+      CYPRESS_PROD_CLIENT_SECRET:
+        required: true
+      CYPRESS_PROD_CLIENT_ID:
+        required: true
     inputs:
       environment:
         description: 'environment'
@@ -36,6 +48,12 @@ on:
         required: true
         type: string
 env:
+  CYPRESS_DEV_CLIENT_SECRET: ${{ secrets.CYPRESS_DEV_CLIENT_SECRET }}
+  CYPRESS_DEV_CLIENT_ID: ${{ secrets.CYPRESS_DEV_CLIENT_ID }}
+  CYPRESS_QA_CLIENT_SECRET: ${{ secrets.CYPRESS_QA_CLIENT_SECRET }}
+  CYPRESS_QA_CLIENT_ID: ${{ secrets.CYPRESS_QA_CLIENT_ID }}
+  CYPRESS_PROD_CLIENT_SECRET: ${{ secrets.CYPRESS_PROD_CLIENT_SECRET }}
+  CYPRESS_PROD_CLIENT_ID: ${{ secrets.CYPRESS_PROD_CLIENT_ID }}
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
   UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
@@ -102,7 +120,7 @@ jobs:
       - name: E2E Tests DEV
         if: ${{ env.ENV == 'dev' && env.SPECS =='' }}
         env:
-          CYPRESS_BASE_URL: 'https://d3npzvqlsc8z51.cloudfront.net/'
+          CYPRESS_BASE_URL: 'https://webapp.us-west-2.dev.watercolor.naxgrp.com/'
           CYPRESS_ENVIRONMENT: 'dev'
         run: |
           RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
@@ -112,6 +130,14 @@ jobs:
         env:
           CYPRESS_BASE_URL: 'https://webapp.us-west-2.stg.watercolor.naxgrp.com/'
           CYPRESS_ENVIRONMENT: 'qa'
+        run: |
+          RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
+
+      - name: E2E Tests PROD
+        if: ${{ env.ENV == 'prod' && env.SPECS =='' }}
+        env:
+          CYPRESS_BASE_URL: 'https://webapp.us-west-2.prd.watercolor.naxgrp.com/'
+          CYPRESS_ENVIRONMENT: 'prod'
         run: |
           RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
 
