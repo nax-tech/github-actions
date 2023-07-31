@@ -1,0 +1,157 @@
+name: Test E2E
+
+on:
+  workflow_call:
+    secrets:
+      ARTIFACTORY_TOKEN:
+        required: true
+      ARTIFACTORY_USERNAME:
+        required: true
+      ARTIFACTORY_IDENTITY_TOKEN:
+        required: true
+      UPDATE_MANIFEST_TOKEN:
+        required: true
+      TESTRAIL_USERNAME:
+        required: false
+      TESTRAIL_PASSWORD:
+        required: false
+
+    inputs:
+      environment:
+        description: "environment"
+        required: true
+        default: "dev"
+        type: string
+      app:
+        description: "application"
+        required: true
+        default: ""
+        type: string
+      specs:
+        description: "cypress specs"
+        required: false
+        type: string
+
+      TESTRAIL_ENABLED:
+        description: "TESTRAIL_ENABLED"
+        required: false
+        default: "false"
+        type: string
+      TESTRAIL_INSTANCE_NAME:
+        description: "TESTRAIL_INSTANCE_NAME"
+        required: false
+        type: string
+      TESTRAIL_PROJECT_NAME:
+        description: "TESTRAIL_INSTANCE_NAME"
+        required: false
+        type: string
+
+env:
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+  ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+  UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
+  TESTRAIL_USERNAME: ${{ secrets.TESTRAIL_USERNAME }}
+  TESTRAIL_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD }}
+
+jobs:
+  all-tests:
+    runs-on: ubuntu-latest
+    # run 3 instances in parallel
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [1, 2, 3]
+    steps:
+      - run: env
+
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Setup NodeJS 16
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir-path
+        run: echo "::set-output name=dir::$(pnpm config get cacheFolder)"
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        id: pnpm-cache
+        with:
+          path: |
+            ${{ steps.pnpm-cache-dir-path.outputs.dir }}
+            **\node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Cache Cypress binary
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-cypress-${{ hashFiles('**/package.json') }}
+          restore-keys: |
+            cypress-${{ runner.os }}-cypress-
+
+      - name: Install dependencies
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        run: pnpm install
+
+      - name: E2E Tests ${{ inputs.environment }}
+        env:
+          CYPRESS_ENVIRONMENT: ${{ inputs.environment }}
+          # required to split tests to run in parallel
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
+        run: |
+          RUN=CI pnpm nx e2e ${{ inputs.app }} --configuration=${{ inputs.environment }} --skip-nx-cache
+
+      - name: Merge test results into one
+        if: always()
+        run: |
+          pnpm nx report:merge ${{ inputs.app }}
+          pnpm nx report:merge-junit ${{ inputs.app }}
+
+      - name: Generate HTML report
+        if: always()
+        run: pnpm nx report:generate ${{ inputs.app }}
+
+      - name: Archive code coverage results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-report
+          path: public
+
+      # install python to install trcli if TESTRAIL_ENABLED
+      - name: Python setup
+        if: ${{ inputs.TESTRAIL_ENABLED == 'true' }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.x"
+
+      # send reports to TestRail if TESTRAIL_ENABLED
+      - name: TestRail CLI upload results
+        if: ${{ inputs.TESTRAIL_ENABLED == 'true' }}
+        run: |
+          pip install trcli
+          trcli -y \
+            -h https://${{ inputs.TESTRAIL_INSTANCE_NAME }}.testrail.io/ \
+            --project "${{ inputs.TESTRAIL_PROJECT_NAME }}" \
+            -u ${{ secrets.TESTRAIL_USERNAME }} \
+            -p ${{ secrets.TESTRAIL_PASSWORD }} \
+            parse_junit \
+            --case-matcher "name" \
+            --title "Automated Tests from GitHub workflow" \
+            --close-run \
+            --run-description ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
+            -f "apps/${{ inputs.app }}/reports/junit-report.xml"
