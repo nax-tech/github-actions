@@ -79,6 +79,6 @@ jobs:
         working-directory: terraform
         run: |
           terraform workspace list
-          terraform apply -auto-approve -input=false -refresh=false
+          terraform apply -auto-approve -input=false
         env:
           TF_WORKSPACE: ${{ matrix.environment }}
