@@ -67,7 +67,7 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: "oracle"
+          distribution: "corretto"
           java-version: "17"
           cache: "maven"
           overwrite-settings: false
@@ -96,11 +96,12 @@ jobs:
           echo "value=$value-${branch_name_formatted}"
           mvn versions:set -DnewVersion=$value-${branch_name_formatted} -DgenerateBackupPoms=false
 
+      # force using naxgrp/amazoncorretto:17-alpine3.17 in dockerhub via jfrog remote proxy
       - name: Maven Build
         id: mvn_build
         run: |
           mkdir artifacts
-          mvn -B deploy -Pdocker-deploy
+          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker-remote/naxgrp/amazoncorretto:17-alpine3.17
           mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout > artifacts/version
           echo $(basename ${GITHUB_REPOSITORY})
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
