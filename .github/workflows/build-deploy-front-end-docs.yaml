@@ -63,10 +63,10 @@ jobs:
         run: pnpm install
 
       - name: Build Docs
-        run: pnpm nx build docs --skip-nx-cache
+        run: pnpm nx build docs
 
       - name: Build Storybook
-        run: pnpm nx build storybook --skip-nx-cache
+        run: pnpm nx build storybook
 
       - name: Prepare Pages
         run: |

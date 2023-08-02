@@ -115,7 +115,7 @@ jobs:
         env:
           CYPRESS_ENVIRONMENT: 'dev'
         run: |
-          RUN=CI pnpm nx e2e-parallel-local $APP --skip-nx-cache
+          RUN=CI pnpm nx e2e-parallel-local $APP
 
       - name: E2E Tests DEV
         if: ${{ env.ENV == 'dev' && env.SPECS =='' }}
@@ -123,7 +123,7 @@ jobs:
           CYPRESS_BASE_URL: 'https://webapp.us-west-2.dev.watercolor.naxgrp.com/'
           CYPRESS_ENVIRONMENT: 'dev'
         run: |
-          RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
+          RUN=CI pnpm nx e2e-parallel $APP
 
       - name: E2E Tests QA
         if: ${{ env.ENV == 'qa' && env.SPECS =='' }}
@@ -131,7 +131,7 @@ jobs:
           CYPRESS_BASE_URL: 'https://webapp.us-west-2.stg.watercolor.naxgrp.com/'
           CYPRESS_ENVIRONMENT: 'qa'
         run: |
-          RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
+          RUN=CI pnpm nx e2e-parallel $APP
 
       - name: E2E Tests PROD
         if: ${{ env.ENV == 'prod' && env.SPECS =='' }}
@@ -139,7 +139,7 @@ jobs:
           CYPRESS_BASE_URL: 'https://webapp.us-west-2.prd.watercolor.naxgrp.com/'
           CYPRESS_ENVIRONMENT: 'prod'
         run: |
-          RUN=CI pnpm nx e2e-parallel $APP --skip-nx-cache
+          RUN=CI pnpm nx e2e-parallel $APP
 
       - name: E2E Tests Smoke Dev Local
         if: ${{ env.ENV == 'local_dev' && env.SPECS !='' }}
@@ -147,7 +147,7 @@ jobs:
           CYPRESS_ENVIRONMENT: 'dev'
           ARGS: ${{env.SPECS}}
         run: |
-          RUN=CI pnpm nx e2e-single-local $APP --skip-nx-cache
+          RUN=CI pnpm nx e2e-single-local $APP
 
       - name: Merge test results into one
         if: always()
