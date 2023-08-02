@@ -11,14 +11,7 @@ on:
         required: true
       JF_URL:
         required: true
-  branch_protection_rule:
-    types: [created, edited]
-  pull_request_target:
-    types: [opened, synchronize]
-  push:
-    branches:
-      - main
-      - master
+
 permissions:
   pull-requests: write
   contents: read
