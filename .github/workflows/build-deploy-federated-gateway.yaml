@@ -153,4 +153,5 @@ jobs:
             -H "Accept: application/vnd.github.everest-preview+json" \
             -H "Authorization: token ${{ secrets.UPDATE_MANIFEST_TOKEN }}" \
             https://api.github.com/repos/${{ vars.TF_VAR_JV_PROJECT }}-${{vars.TF_VAR_JV}}/.platform/dispatches \
+            --fail-with-body \
             -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"directory_name\": \"$(basename ${GITHUB_REPOSITORY})\", \"environment_dir\": \"dev\", \"digest\": \"${{ steps.build-push.outputs.digest }}\"}}"
