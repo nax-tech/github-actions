@@ -151,9 +151,7 @@ jobs:
 
       - name: Generate HTML report
         if: always()
-        run: |
-          pnpm nx report:generate ${{ inputs.app }}
-          pnpm nx report:copy-ada ${{ inputs.app }}
+        run: pnpm nx report:generate ${{ inputs.app }}
 
       - name: Archive code coverage results
         if: always()
