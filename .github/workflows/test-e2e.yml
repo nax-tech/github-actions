@@ -83,7 +83,7 @@ env:
   CYPRESS_TWILIO_PASSWORD: ${{ secrets.TESTRAIL_PASSWORD }}
 
 jobs:
-  all-tests:
+  run-tests:
     runs-on: ubuntu-latest
     # run 3 instances in parallel
     strategy:
@@ -143,6 +143,62 @@ jobs:
         run: |
           RUN=CI pnpm nx e2e ${{ inputs.app }} --configuration=${{ inputs.environment }} --skip-nx-cache
 
+      - name: Archive code coverage results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: reports
+          path: apps/${{ inputs.app }}/reports
+
+  generate-reports:
+    needs: run-tests
+    runs-on: ubuntu-latest
+    env:
+      ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+      ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+      ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+    steps:
+      - run: env
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Setup NodeJS 16
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir-path
+        run: echo "::set-output name=dir::$(pnpm config get cacheFolder)"
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        id: pnpm-cache
+        with:
+          path: |
+            ${{ steps.pnpm-cache-dir-path.outputs.dir }}
+            **\node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        run: pnpm install
+
+      - name: Download code coverage results
+        if: always()
+        uses: actions/download-artifact@v2
+        with:
+          name: reports
+          path: apps/${{ inputs.app }}/reports
+
       - name: Merge test results into one
         if: always()
         run: |
@@ -151,9 +207,14 @@ jobs:
 
       - name: Generate HTML report
         if: always()
-        run: |
-          pnpm nx report:generate ${{ inputs.app }}
-          pnpm nx report:copy-ada ${{ inputs.app }}
+        run: pnpm nx report:generate ${{ inputs.app }}
+
+      - name: Archive junit report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: junit-report
+          path: apps/${{ inputs.app }}/reports/junit-report.xml
 
       - name: Archive code coverage results
         if: always()
