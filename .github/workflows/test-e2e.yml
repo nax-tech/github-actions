@@ -134,7 +134,18 @@ jobs:
         if: steps.pnpm-cache.outputs.cache-hit != 'true'
         run: pnpm install
 
+      - name: E2E Smoke Tests ${{ inputs.environment }}
+        if: ${{ inputs.environment == 'prod' }}
+        env:
+          CYPRESS_ENVIRONMENT: ${{ inputs.environment }}
+          # required to split tests to run in parallel
+          SPLIT: ${{ strategy.job-total }}
+          SPLIT_INDEX: ${{ strategy.job-index }}
+        run: |
+          RUN=CI pnpm nx e2e-smoke ${{ inputs.app }} --configuration=${{ inputs.environment }} --skip-nx-cache
+
       - name: E2E Tests ${{ inputs.environment }}
+        if: ${{ inputs.environment != 'prod' }}
         env:
           CYPRESS_ENVIRONMENT: ${{ inputs.environment }}
           # required to split tests to run in parallel
