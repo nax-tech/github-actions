@@ -104,7 +104,7 @@ jobs:
       - name: Maven Build - Tag
         id: mvn_build
         run: |
-          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
+          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker-local/naxgrp/amazoncorretto:17-alpine3.17
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
           echo "digest=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_OUTPUT
 
@@ -123,7 +123,7 @@ jobs:
       - name: Maven Build - Snapshot
         id: mvn_build_snapshot
         run: |
-          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
+          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker-local/naxgrp/amazoncorretto:17-alpine3.17
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
           echo "digest=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_OUTPUT
 
