@@ -15,6 +15,14 @@ on:
         required: false
       TESTRAIL_PASSWORD:
         required: false
+      BROWSERSTACK_USERNAME:
+        description: "BROWSERSTACK_USERNAME"
+        required: false
+        type: string
+      BROWSERSTACK_ACCESS_KEY:
+        description: "BROWSERSTACK_ACCESS_KEY"
+        required: false
+        type: string
 
     inputs:
       environment:
@@ -67,6 +75,12 @@ on:
       CYPRESS_TWILIO_PASSWORD:
         description: "CYPRESS_TWILIO_PASSWORD"
         required: false
+        type: string
+
+      BROWSERSTACK_ENABLED:
+        description: "BROWSERSTACK_ENABLED"
+        required: false
+        default: "false"
         type: string
 
 env:
@@ -257,3 +271,67 @@ jobs:
             --close-run \
             --run-description ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} \
             -f "apps/${{ inputs.app }}/reports/junit-report.xml"
+
+  browserstack-cypress:
+    runs-on: ubuntu-latest
+    if: ${{ inputs.BROWSERSTACK_ENABLED == 'true' }}
+    env:
+      ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+      ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+      ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+      BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+      BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+    steps:
+      - run: env
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - name: Setup NodeJS 16
+        uses: actions/setup-node@v1
+        with:
+          node-version: 16
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Get pnpm cache directory path
+        id: pnpm-cache-dir-path
+        run: echo "::set-output name=dir::$(pnpm config get cacheFolder)"
+
+      - name: Cache pnpm dependencies
+        uses: actions/cache@v3
+        id: pnpm-cache
+        with:
+          path: |
+            ${{ steps.pnpm-cache-dir-path.outputs.dir }}
+            **\node_modules
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+
+      - name: Install dependencies
+        if: steps.pnpm-cache.outputs.cache-hit != 'true'
+        run: pnpm install
+
+      - name: "BrowserStack Env Setup"
+        uses: "browserstack/github-actions/setup-env@master"
+        with:
+          username: ${{ secrets.BROWSERSTACK_USERNAME }}
+          access-key: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+          build-name: ${{ github.run_id }}
+          project-name: ${{ inputs.app }}
+
+      - name: "BrowserStack Local Tunnel Setup" # Invokes the setup-local action
+        uses: browserstack/github-actions/setup-local@master
+        with:
+          local-testing: start
+          local-identifier: random
+
+      - name: "Installing browserstack-cypress-cli"
+        run: npm install -g browserstack-cypress-cli
+
+      - name: "Running test on BrowserStack" # Invokes the actual test script that would run on BrowserStack browsers
+        run: RUN=CI pnpm nx browserstack:run ${{ inputs.app }} --args="--username=${{ secrets.BROWSERSTACK_USERNAME }} --accessKey=${{ secrets.BROWSERSTACK_ACCESS_KEY }}"
