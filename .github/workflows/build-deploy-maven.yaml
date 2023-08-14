@@ -101,7 +101,7 @@ jobs:
         id: mvn_build
         run: |
           mkdir artifacts
-          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker-local/naxgrp/amazoncorretto:17-alpine3.17
+          mvn -B deploy -Pdocker-deploy -Djib.from.image=docker.io/naxgrp/amazoncorretto:17-alpine3.17
           mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout > artifacts/version
           echo $(basename ${GITHUB_REPOSITORY})
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
