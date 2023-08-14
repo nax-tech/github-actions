@@ -18,11 +18,9 @@ on:
       BROWSERSTACK_USERNAME:
         description: "BROWSERSTACK_USERNAME"
         required: false
-        type: string
       BROWSERSTACK_ACCESS_KEY:
         description: "BROWSERSTACK_ACCESS_KEY"
         required: false
-        type: string
 
     inputs:
       environment:
@@ -273,6 +271,7 @@ jobs:
             -f "apps/${{ inputs.app }}/reports/junit-report.xml"
 
   browserstack-cypress:
+    needs: run-tests
     runs-on: ubuntu-latest
     if: ${{ inputs.BROWSERSTACK_ENABLED == 'true' }}
     env:
