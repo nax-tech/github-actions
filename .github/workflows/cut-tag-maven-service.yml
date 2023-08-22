@@ -135,6 +135,14 @@ jobs:
           git commit -am "Prepare next development version ${{ steps.SNAPSHOT.outputs.value }}"
           git push origin main
 
+
+      - name: Record Summary
+        run: |
+          echo "### Tagged Version" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.mvn_build.outputs.digest }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Snapshot" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.mvn_build_snapshot.outputs.digest }}" >> $GITHUB_STEP_SUMMARY
+
       - name: Prepare Artifact
         run: |
           echo "${{ steps.mvn_build.outputs.digest }}" >> digest.txt
