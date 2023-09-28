@@ -1,5 +1,14 @@
 on:
   workflow_call:
+    inputs:
+      context:
+        type: string
+        description: "The context for docker build"
+        default: "."
+      dockerfile:
+        type: string
+        description: "The absolute path to the DockerFile"
+        default: "Dockerfile"
     secrets:
       ARTIFACTORY_USERNAME:
         required: true
@@ -79,7 +88,8 @@ jobs:
         uses: docker/build-push-action@v4
         id: build-push
         with:
-          context: .
+          context: ${{ inputs.context }}
+          file: ${{ inputs.dockerfile }}
           platforms: linux/amd64
           push: true
           tags: ${{ steps.meta.outputs.tags }}
