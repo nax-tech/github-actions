@@ -27,7 +27,7 @@ jobs:
           kind: Kustomization
 
           resources:
-            - git@github.com:${{github.repository_owner}}/${{ github.event.client_payload.resource_directory_name || github.event.client_payload.directory_name }}/.platform/kubernetes/${{ github.event.client_payload.environment_dir }}
+            - ${{ vars.PLATFORM_GITHUB_BASE_URI }}/${{ github.event.client_payload.resource_directory_name || github.event.client_payload.directory_name }}/.platform/kubernetes/${{ github.event.client_payload.environment_dir }}
           EndOfMessage
           fi
           kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{ vars.TF_VAR_JV_PROJECT}}-${{ vars.TF_VAR_JV_NAME }}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
