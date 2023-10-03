@@ -63,6 +63,9 @@ jobs:
   build-and-publish-snapshots:
     runs-on: ubuntu-latest
     steps:
+      - name: Test Environment
+        run: echo "${{ vars.HELLO_WORLD }}"
+
       - name: Checkout Code
         uses: actions/checkout@v3
         with:
