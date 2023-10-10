@@ -25,37 +25,49 @@ jobs:
         with:
           servers: >
             [
-              { "id": "central", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
-              { "id": "snapshots", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
+              { "id": "artifactory-releases", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
+              { "id": "artifactory-snapshots", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
             ]
-          repositories: >
+          active_profiles: >
+            [
+              "artifactory"
+            ]
+          profiles: >
             [
               {
-                "id": "central",
-                "name":  "${{ github.repository_owner }}-libs-release",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                "snapshots": { "enabled": "false" }
-              },
-              {
-                "id": "snapshots",
-                "name":  "${{ github.repository_owner }}-libs-snapshot",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                "snapshots": { "enabled": "true" }
-              }
-            ]
-          plugin_repositories: >
-            [
-              {
-                "id": "central",
-                "name":  "${{ github.repository_owner }}-libs-release",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                "snapshots": { "enabled": "false" }
-              },
-              {
-                "id": "snapshots",
-                "name":  "${{ github.repository_owner }}-libs-snapshot",
-                "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                "snapshots": { "enabled": "true" }
+                "id": "artifactory",
+                "repositories": [
+                  {
+                    "id": "artifactory-releases",
+                    "name":  "${{ github.repository_owner }}-libs-release",
+                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
+                    "releases": { "enabled": "true" },
+                    "snapshots": { "enabled": "false" }
+                  },
+                  {
+                    "id": "artifactory-snapshots",
+                    "name":  "${{ github.repository_owner }}-libs-snapshot",
+                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
+                    "releases": { "enabled": "false" },
+                    "snapshots": { "enabled": "true" }
+                  }
+                ],
+                "pluginRepositories": [
+                  {
+                    "id": "artifactory-releases",
+                    "name":  "${{ github.repository_owner }}-libs-release",
+                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
+                    "releases": { "enabled": "true" },
+                    "snapshots": { "enabled": "false" }
+                  },
+                  {
+                    "id": "artifactory-snapshots",
+                    "name":  "${{ github.repository_owner }}-libs-snapshot",
+                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
+                    "releases": { "enabled": "false" },
+                    "snapshots": { "enabled": "true" }
+                  }
+                ]
               }
             ]
 
