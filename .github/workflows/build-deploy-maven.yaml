@@ -33,8 +33,11 @@ jobs:
           ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
           ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
         run: |
+          mkdir -p $HOME/.m2
+          touch $HOME/.m2/settings.xml
           env | grep 'CLOUDSMITH\|ARTIFACTORY' | tee $RUNNER_TEMP/env.txt
           docker run -v $HOME/.m2:/root/.m2 --env-file $RUNNER_TEMP/env.txt naxgrp.jfrog.io/nax-platform-docker/applications/nax-cli:0.1.2 context -o $GITHUB_REPOSITORY_OWNER
+          ls -la $HOME
 
       - name: Setup Java
         uses: actions/setup-java@v3
