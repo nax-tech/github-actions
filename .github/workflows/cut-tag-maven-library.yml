@@ -5,9 +5,9 @@ on:
         type: string
         description: >
           A comma-separated list (no spaces) of Artifact Storage providers to use for this workflow.
-          Valid options are artifactory, cloudsmith. If not specified, defaults to all of them.
+          Valid options are artifactory, cloudsmith. If not specified, defaults to artifactory.
         required: false
-        default: artifactory,cloudsmith
+        default: artifactory
       destination_provider:
         type: string
         description: >
