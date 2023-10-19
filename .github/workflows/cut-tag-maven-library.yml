@@ -1,5 +1,19 @@
 on:
   workflow_call:
+    inputs:
+      providers:
+        type: string
+        description: >
+          A comma-separated list (no spaces) of Artifact Storage providers to use for this workflow.
+          Valid options are artifactory, cloudsmith. If not specified, defaults to artifactory.
+        required: false
+        default: artifactory
+      cloudsmith_service_account:
+        type: string
+        description: >
+          The name of the Cloudsmith service account to use for accessing to Cloudsmith.
+          Required if cloudsmith is specified in the providers input.
+        required: false
     secrets:
       ARTIFACTORY_USERNAME:
         required: true
@@ -16,60 +30,39 @@ jobs:
     runs-on: ubuntu-latest
     outputs:
       tag_name: ${{ steps.TAG.outputs.tag_name }}
+
+    permissions:
+      id-token: write
+      contents: write
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Configure Maven
-        uses: whelk-io/maven-settings-xml-action@v21
+      - name: Login to Artifactory Container Registry
+        uses: docker/login-action@v2
         with:
-          servers: >
-            [
-              { "id": "artifactory-releases", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" },
-              { "id": "artifactory-snapshots", "username": "${{ secrets.ARTIFACTORY_USERNAME }}", "password": "${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}" }
-            ]
-          active_profiles: >
-            [
-              "artifactory"
-            ]
-          profiles: >
-            [
-              {
-                "id": "artifactory",
-                "repositories": [
-                  {
-                    "id": "artifactory-releases",
-                    "name":  "${{ github.repository_owner }}-libs-release",
-                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                    "releases": { "enabled": "true" },
-                    "snapshots": { "enabled": "false" }
-                  },
-                  {
-                    "id": "artifactory-snapshots",
-                    "name":  "${{ github.repository_owner }}-libs-snapshot",
-                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                    "releases": { "enabled": "false" },
-                    "snapshots": { "enabled": "true" }
-                  }
-                ],
-                "pluginRepositories": [
-                  {
-                    "id": "artifactory-releases",
-                    "name":  "${{ github.repository_owner }}-libs-release",
-                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-release",
-                    "releases": { "enabled": "true" },
-                    "snapshots": { "enabled": "false" }
-                  },
-                  {
-                    "id": "artifactory-snapshots",
-                    "name":  "${{ github.repository_owner }}-libs-snapshot",
-                    "url": "https://naxgrp.jfrog.io/artifactory/${{ github.repository_owner }}-libs-snapshot",
-                    "releases": { "enabled": "false" },
-                    "snapshots": { "enabled": "true" }
-                  }
-                ]
-              }
-            ]
+          registry: naxgrp.jfrog.io
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+
+      # Set up Cloudsmith environment variables if necessary
+      - name: Login to Cloudsmith if necessary
+        if: contains(inputs.providers, 'cloudsmith')
+        uses: nax-platform/cloudsmith-login@v2
+        with:
+          slug: ${{ inputs.cloudsmith_service_account }}
+          namespace: nax-group
+
+      - name: Configure Maven
+        env:
+          ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+          ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+        run: |
+          mkdir -p $HOME/.m2
+          touch $HOME/.m2/settings.xml
+          env | grep 'CLOUDSMITH\|ARTIFACTORY' | tee $RUNNER_TEMP/env.txt
+          docker run -v $HOME/.m2:/root/.m2 --env-file $RUNNER_TEMP/env.txt naxgrp.jfrog.io/nax-platform-docker/applications/nax-cli:0.1.3 context -o $GITHUB_REPOSITORY_OWNER -p ${{ inputs.providers }}
 
       - name: Setup Java
         uses: actions/setup-java@v3
