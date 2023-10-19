@@ -5,14 +5,14 @@ on:
         type: string
         description: >
           A comma-separated list (no spaces) of Artifact Storage providers to use for this workflow.
-          Valid options are artifactory, cloudsmith. If not specified, defaults to artifactory.
+          Valid options are artifactory, cloudsmith. If not specified, defaults to all of them.
         required: false
-        default: artifactory
+        default: artifactory,cloudsmith
       destination_provider:
         type: string
         description: >
           A value indicating which Artifact Storage provider is the "primary" (i.e. where will packages be deployed).
-          Default is artifactory.
+          Be aware that the destination_provider must also be in the list of source_providers. Default is artifactory.
         required: false
         default: artifactory
       cloudsmith_service_account:
