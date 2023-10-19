@@ -8,6 +8,13 @@ on:
           Valid options are artifactory, cloudsmith. If not specified, defaults to artifactory.
         required: false
         default: artifactory
+      is_cloudsmith_primary:
+        type: boolean
+        description: >
+          A value indicating whether the package should be deployed to Cloudsmith.
+          If not specified, deploys to Artifactory.
+        required: false
+        default: false
       cloudsmith_service_account:
         type: string
         description: >
@@ -102,7 +109,7 @@ jobs:
       - name: Maven Build - Tag
         id: mvn_build
         run: |
-          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
+          mvn -DdeployCloudsmith=${{ inputs.is_cloudsmith_primary }} -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
           echo "digest=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_OUTPUT
 
@@ -121,7 +128,7 @@ jobs:
       - name: Maven Build - Snapshot
         id: mvn_build_snapshot
         run: |
-          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
+          mvn -DdeployCloudsmith=${{ inputs.is_cloudsmith_primary }} -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest
           echo "digest=$(cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest)" >> $GITHUB_OUTPUT
 

@@ -10,6 +10,13 @@ on:
           Valid options are artifactory, cloudsmith. If not specified, defaults to artifactory.
         required: false
         default: artifactory
+      is_cloudsmith_primary:
+        type: boolean
+        description: >
+          A value indicating whether the package should be deployed to Cloudsmith.
+          If not specified, deploys to Artifactory.
+        required: false
+        default: false
       cloudsmith_service_account:
         type: string
         description: >
@@ -80,5 +87,5 @@ jobs:
         id: mvn_build
         run: |
           value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)
-          mvn -B install deploy
+          mvn -DdeployCloudsmith=${{ inputs.is_cloudsmith_primary }} -B install deploy
           echo "Maven version: $value" >> $GITHUB_STEP_SUMMARY

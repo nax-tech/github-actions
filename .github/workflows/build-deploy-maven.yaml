@@ -8,6 +8,13 @@ on:
           Valid options are artifactory, cloudsmith. If not specified, defaults to artifactory.
         required: false
         default: artifactory
+      is_cloudsmith_primary:
+        type: boolean
+        description: >
+          A value indicating whether the package should be deployed to Cloudsmith.
+          If not specified, deploys to Artifactory.
+        required: false
+        default: false
       cloudsmith_service_account:
         type: string
         description: >
@@ -95,7 +102,7 @@ jobs:
         id: mvn_build
         run: |
           mkdir artifacts
-          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
+          mvn -B deploy -Pdocker-deploy -DdeployCloudsmith=${{ inputs.is_cloudsmith_primary }} -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17
           mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout > artifacts/version
           echo $(basename ${GITHUB_REPOSITORY})
           cat $(basename ${GITHUB_REPOSITORY})-server/target/jib-image.digest

@@ -8,6 +8,13 @@ on:
           Valid options are artifactory, cloudsmith. If not specified, defaults to artifactory.
         required: false
         default: artifactory
+      is_cloudsmith_primary:
+        type: boolean
+        description: >
+          A value indicating whether the package should be deployed to Cloudsmith.
+          If not specified, deploys to Artifactory.
+        required: false
+        default: false
       cloudsmith_service_account:
         type: string
         description: >
@@ -93,7 +100,7 @@ jobs:
           git push origin main
 
       - name: Maven Build - Tag
-        run: mvn -B install deploy
+        run: mvn -DdeployCloudsmith=${{ inputs.is_cloudsmith_primary }} -B install deploy
 
       - name: Set SNAPSHOT_INCREMENT_INDEX
         id: SNAPSHOT_INCREMENT_INDEX
@@ -104,7 +111,7 @@ jobs:
         run: |
           mvn versions:set -DnextSnapshot -DnextSnapshotIndexToIncrement=${{ steps.SNAPSHOT_INCREMENT_INDEX.outputs.value }} -DgenerateBackupPoms=false
           echo "value=$(mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout)" >> $GITHUB_OUTPUT
-          mvn -B install deploy
+          mvn -DdeployCloudsmith=${{ inputs.is_cloudsmith_primary }} -B install deploy
 
       - name: Commit snapshot version update
         run: |
