@@ -6,6 +6,9 @@ on:
 permissions:
   contents: write
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   update-image-digest:
     runs-on: ubuntu-latest
@@ -16,14 +19,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Update image digest
+      - name: Update image digest for Infra-Eks Managed Clusters (via SSH Auth)
         run: |
-          mkdir -p ${{ github.workspace }}/kubernetes/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          export RUNTIME_DIRECTORY="kubernetes"
+          mkdir -p ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
           curl -s -o install_kustomize.sh "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
           chmod +x ./install_kustomize.sh; 
           ./install_kustomize.sh 5.1.0
           sudo mv kustomize /usr/local/bin/kustomize
-          cd ${{ github.workspace }}/kubernetes/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          cd ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
           if [ ! -f kustomization.yaml ]; then cat > kustomization.yaml << EndOfMessage
           apiVersion: kustomize.config.k8s.io/v1beta1
           kind: Kustomization
@@ -32,11 +36,32 @@ jobs:
             - git@github.com:${{github.repository_owner}}/${{ github.event.client_payload.resource_directory_name || github.event.client_payload.directory_name }}/.platform/kubernetes/${{ github.event.client_payload.environment_dir }}
           EndOfMessage
           fi
-          kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{ vars.TF_VAR_JV_PROJECT}}-${{ vars.TF_VAR_JV_NAME }}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
+          kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{github.repository_owner}}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
+          git add .
+
+      - name: Update image digest for Run Studio Managed Clusters (via HTTPS Auth)
+        run: |
+          export RUNTIME_DIRECTORY="run-studio"
+          mkdir -p ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          curl -s -o install_kustomize.sh "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
+          chmod +x ./install_kustomize.sh; 
+          ./install_kustomize.sh 5.1.0
+          sudo mv kustomize /usr/local/bin/kustomize
+          cd ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          if [ ! -f kustomization.yaml ]; then cat > kustomization.yaml << EndOfMessage
+          apiVersion: kustomize.config.k8s.io/v1beta1
+          kind: Kustomization
+
+          resources:
+            - https://github.com/${{github.repository_owner}}/${{ github.event.client_payload.resource_directory_name || github.event.client_payload.directory_name }}/.platform/kubernetes/${{ github.event.client_payload.environment_dir }}
+          EndOfMessage
+          fi
+          kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{github.repository_owner}}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
+          git add .
+
+      - name: Commit Changes
+        run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add .
           git commit -m "[skip ci] Update ${{ github.event.client_payload.directory_name }} image digest to ${{ github.event.client_payload.digest }}"
           git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
