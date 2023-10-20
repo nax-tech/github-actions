@@ -21,12 +21,13 @@ jobs:
 
       - name: Update image digest
         run: |
-          mkdir -p ${{ github.workspace }}/kubernetes/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          export RUNTIME_DIRECTORY="kubernetes"
+          mkdir -p ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
           curl -s -o install_kustomize.sh "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"
           chmod +x ./install_kustomize.sh; 
           ./install_kustomize.sh 5.1.0
           sudo mv kustomize /usr/local/bin/kustomize
-          cd ${{ github.workspace }}/kubernetes/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          cd ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
           if [ ! -f kustomization.yaml ]; then cat > kustomization.yaml << EndOfMessage
           apiVersion: kustomize.config.k8s.io/v1beta1
           kind: Kustomization
@@ -40,10 +41,11 @@ jobs:
 
       - name: Update image digest for Run Studio
         run: |
-          mkdir -p ${{ github.workspace }}/run-studio/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          export RUNTIME_DIRECTORY="run-studio"
+          mkdir -p ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
           curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
           sudo mv kustomize /usr/local/bin/kustomize
-          cd ${{ github.workspace }}/run-studio/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
+          cd ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/${{ github.event.client_payload.environment_dir }}
           if [ ! -f kustomization.yaml ]; then cat > kustomization.yaml << EndOfMessage
           apiVersion: kustomize.config.k8s.io/v1beta1
           kind: Kustomization
