@@ -23,6 +23,7 @@ on:
           The name of the Cloudsmith service account to use for accessing to Cloudsmith.
           Required if cloudsmith is specified in the providers input.
         required: false
+        default: ${{ github.repository_owner }}-ci
     secrets:
       ARTIFACTORY_USERNAME:
         required: true
