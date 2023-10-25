@@ -11,7 +11,7 @@ while (( "$#" )); do
 done
 
 # Trigger the action with curl
-CURL_TARGET="https://api.github.com/repos/${args[org]}/${args[repo]}/dispatches"
+CURL_TARGET="${args[url]}"
 BODY="{\"event_type\": \"${args[event_type]}\", \"client_payload\": ${args[client_payload]}}"
 echo "${CURL_TARGET}"
 echo "$BODY"

@@ -49,8 +49,7 @@ jobs:
         run: |
           APP=${{ steps.get_release.outputs.app }}
           github-actions/.github/workflows/trigger-action.sh \
-            --org ${{vars.TF_VAR_JV_PROJECT}}-${{vars.TF_VAR_JV_NAME}} \
-            --repo .platform \
+            --url ${{ vars.PLATFORM_DISPATCH_URL }} \
             --event_type update-digest \
             --token ${{ secrets.TOKEN }} \
             --client_payload "{\"directory_name\": \"fe-$APP\", \"resource_directory_name\": \"${{ github.event.repository.name }}/apps/$APP\", \"image_name\": \"fe-$APP\", \"environment_dir\": \"${{ inputs.target-env }}\", \"digest\": \"${{ steps.get_release.outputs.digest }}\"}"
