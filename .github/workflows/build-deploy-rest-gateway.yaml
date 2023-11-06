@@ -17,8 +17,7 @@ on:
         value: ${{ jobs.build_supergraph.outputs.digest }}
 
 jobs:
-  build_supergraph:
-    needs: collect_subgraphs
+  build:
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.build-push.outputs.digest }}
