@@ -98,7 +98,7 @@ jobs:
           git commit -am "Set version to ${{ steps.TAG.outputs.tag_name }}"
           git tag -a ${{ steps.TAG.outputs.tag_name }} -m "Release ${{ steps.TAG.outputs.value }}"
           git push origin ${{ steps.TAG.outputs.tag_name }}
-          git push origin main
+          git push origin ${{ github.ref_name }}
 
       - name: Maven Build - Tag
         run: mvn -DprimaryProvider=${{ inputs.destination_provider }} -B install deploy
@@ -120,7 +120,7 @@ jobs:
           git config user.email github-actions@github.com
           git add .
           git commit -am "Prepare next development version ${{ steps.SNAPSHOT.outputs.value }}"
-          git push origin main
+          git push origin ${{ github.ref_name }}
 
       - uses: ncipollo/release-action@v1.12.0
         with:
