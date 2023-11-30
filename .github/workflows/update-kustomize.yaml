@@ -37,7 +37,7 @@ jobs:
           EndOfMessage
           fi
           kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{github.repository_owner}}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
-          kustomize edit add annotation {meta.naxgrp.com/github-repository:${{github.repository}}}
+          kustomize edit add annotation {meta.naxgrp.com/github-repository-name:${{github.event.repository.name}}}
           git add .
 
       - name: Update image digest for Run Studio Managed Clusters (via HTTPS Auth)
@@ -58,7 +58,7 @@ jobs:
           EndOfMessage
           fi
           kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{github.repository_owner}}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
-          kustomize edit add annotation {meta.naxgrp.com/github-repository:${{github.repository}}}
+          kustomize edit add annotation {meta.naxgrp.com/github-repository-name:${{github.event.repository.name}}}
           git add .
 
       - name: Commit Changes
