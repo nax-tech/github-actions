@@ -52,7 +52,7 @@ jobs:
             --url ${{ vars.PLATFORM_DISPATCH_URL }} \
             --event_type update-digest \
             --token ${{ secrets.TOKEN }} \
-            --client_payload "{\"directory_name\": \"fe-$APP\", \"resource_directory_name\": \"${{ github.event.repository.name }}/apps/$APP\", \"image_name\": \"fe-$APP\", \"environment_dir\": \"${{ inputs.target-env }}\", \"digest\": \"${{ steps.get_release.outputs.digest }}\"}"
+            --client_payload "{\"repository\": \"${{ github.event.repository.name }}\", \"directory_name\": \"fe-$APP\", \"resource_directory_name\": \"${{ github.event.repository.name }}/apps/$APP\", \"image_name\": \"fe-$APP\", \"environment_dir\": \"${{ inputs.target-env }}\", \"digest\": \"${{ steps.get_release.outputs.digest }}\"}"
 
       - name: Update github release
         env:
