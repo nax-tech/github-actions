@@ -58,7 +58,7 @@ jobs:
           EndOfMessage
           fi
           kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{github.repository_owner}}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
-          # removes an mistaken annotat
+          # removes a mistaken annotations -- this will be safe to remove later
           kustomize edit remove annotation '{meta.naxgrp.com/github-repository-name' || true
           kustomize edit set annotation meta.naxgrp.com/github-repository:${{github.event.client_payload.repository}}
           git add .
