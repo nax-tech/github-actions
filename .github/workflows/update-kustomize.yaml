@@ -9,13 +9,12 @@ permissions:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-concurrency:
-  group: ${{ github.event.client_payload.directory_name }}
-  cancel-in-progress: false
-
 jobs:
   update-image-digest:
     runs-on: ubuntu-latest
+    concurrency:
+      group: "${{ github.event.client_payload.directory_name }}-${{ github.event.client_payload.environment_dir }}"
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
