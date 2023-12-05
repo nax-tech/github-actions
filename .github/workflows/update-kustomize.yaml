@@ -9,13 +9,12 @@ permissions:
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-concurrency:
-  group: ${{ github.workflow }}
-  cancel-in-progress: false
-
 jobs:
   update-image-digest:
     runs-on: ubuntu-latest
+    concurrency:
+      group: update-kustomization
+      cancel-in-progress: false
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
