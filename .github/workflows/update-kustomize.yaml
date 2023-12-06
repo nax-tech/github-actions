@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     concurrency:
       # cancel-in-progress: true will pre-emptively cancel old jobs if a new update comes in
-      # FYI: push/pebase below retries for 1 minute allowing for concurrent runs of this
+      # FYI: push/rebase below retries for 1 minute allowing for concurrent runs of this
       group: "${{ github.event.client_payload.directory_name }}-${{ github.event.client_payload.environment_dir }}"
       cancel-in-progress: true
     steps:
