@@ -53,6 +53,7 @@ jobs:
           echo >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT
   jv:
+    if: ${{ vars.PLATFORM_TERRAFORM_ENABLED == 'true' }}
     environment: ${{ matrix.env }}
     needs: load_matrix
     strategy:
@@ -75,7 +76,10 @@ jobs:
       - name: Configure AWS credentials for shared services account
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/GithubActionsInfraRole
+          # v4 control plane migration...
+          # if AWS_STATE_ACCOUNT_ID does not exist, go create it
+          # copy the value of AWS_ACCOUNT_ID from Organization-level variables
+          role-to-assume: arn:aws:iam::${{ vars.AWS_STATE_ACCOUNT_ID }}:role/GithubActionsInfraRole
           aws-region: us-west-2
 
       - name: Run Terraform init
@@ -88,7 +92,7 @@ jobs:
           terraform workspace new "${{ matrix.env }}" || true
           terraform workspace select "${{ matrix.env }}"
         env:
-          TF_VAR_account_id: ${{ matrix.id }}
+          TF_VAR_account_id: ${{ vars.AWS_ACCOUNT_ID }}
           TF_VAR_env: ${{ matrix.env }}
 
       - name: Terraform Validate
@@ -96,7 +100,7 @@ jobs:
         working-directory: terraform
         run: terraform validate -no-color
         env:
-          TF_VAR_account_id: ${{ matrix.id }}
+          TF_VAR_account_id: ${{ vars.AWS_ACCOUNT_ID }}
           TF_VAR_env: ${{ matrix.env }}
           TF_WORKSPACE: ${{ matrix.env }}
       - name: Terraform Apply
@@ -112,7 +116,7 @@ jobs:
           terraform apply -auto-approve -input=false
         env:
           TF_VAR_github_ssh_key: ${{ secrets.SSH_KEY }}
-          TF_VAR_account_id: ${{ matrix.id }}
+          TF_VAR_account_id: ${{ vars.AWS_ACCOUNT_ID }}
           TF_VAR_env: ${{ matrix.env }}
           TF_VAR_jv_name: ${{ vars.TF_VAR_JV_NAME}}
           TF_VAR_jv_project: ${{ vars.TF_VAR_JV_PROJECT }}
