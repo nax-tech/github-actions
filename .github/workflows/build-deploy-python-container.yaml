@@ -81,10 +81,6 @@ jobs:
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
 
-      - name: Push Docker Image
-        run: |
-          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.APPS }}:${{ github.sha }}
-
       - name: Trigger Update Image Digest
         if: github.ref == 'refs/heads/main'
         run: |
