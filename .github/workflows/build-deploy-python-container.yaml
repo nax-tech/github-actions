@@ -84,7 +84,7 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_LOCATION}}/${{ inputs.APPS }}:${{ github.sha }}
+          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}:${{ github.sha }}
 
       - name: Trigger Update Image Digest
         if: github.ref == 'refs/heads/main'
