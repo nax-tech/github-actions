@@ -28,6 +28,9 @@ on:
       AWS_REGION:
         required: false
         type: string
+      APPS:
+        required: true
+        type: string
 
 env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
