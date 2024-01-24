@@ -81,11 +81,15 @@ jobs:
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
 
+      - name: Push Docker Image
+        run: |
+          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.APPS }}:${{ github.sha }}
+
       - name: Trigger Update Image Digest
         if: github.ref == 'refs/heads/main'
         run: |
           echo ${{ github.ref }}
-          echo ${{ docker_build.outputs.sha_var }}
+          echo ${{ steps.mvn_build.outputs.digest }}
           echo ${{ vars.PLATFORM_DISPATCH_URL }}
           curl -X POST \
             -H "Accept: application/vnd.github.everest-preview+json" \
