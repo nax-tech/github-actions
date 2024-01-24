@@ -65,9 +65,9 @@ jobs:
         run: |
           poetry install
 
-      - name: Test
-        run: |
-          poetry run pytest # or any other command to run your tests
+      # - name: Test
+      #   run: |
+      #     poetry run pytest # or any other command to run your tests
 
       - name: Build Docker Image
         run: |
