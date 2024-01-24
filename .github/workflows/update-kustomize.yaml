@@ -21,7 +21,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: 'main'
+          ref: "main"
 
       - name: Update image digest for Infra-Eks Managed Clusters (via SSH Auth)
         run: |
@@ -66,7 +66,26 @@ jobs:
           kustomize edit set annotation meta.naxgrp.com/github-repository:${{github.event.client_payload.repository}}
           kustomize edit set annotation meta.naxgrp.com/github-workflow-run-id:${{github.run_id}}-${{github.run_attempt}}
           git add .
-
+      - name: Create backstage components for project
+        run: |
+          export RUNTIME_DIRECTORY="run-studio"
+          mkdir -p ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/catalog-info
+          cd ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/catalog-info
+          cat > catalog-info.yaml << EndOfMessage
+          apiVersion: backstage.io/v1alpha1
+          kind: Component
+          metadata:
+            annotations:
+              argocd/app-selector: naxgrp.com/app=${{ github.event.client_payload.directory_name }}
+              github.com/project-slug: ${{github.repository_owner}}/${{ github.event.client_payload.directory_name }}
+            description: ${{ github.event.client_payload.directory_name }}
+            name: ${{ github.event.client_payload.directory_name }}
+          spec:
+            lifecycle: production
+            owner: user:guest
+            type: website
+          EndOfMessage
+          git add .
       - name: Commit Changes
         timeout-minutes: 1
         run: |
