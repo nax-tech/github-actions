@@ -82,8 +82,8 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/my-python-app:${{ github.sha }}
+          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.APPS }}:${{ github.sha }}
 
       - name: Cleanup
         if: always()
-        run: docker rmi ${{ inputs.ARTIFACTORY_REGISTRY }}/my-python-app:${{ github.sha }}
+        run: docker rmi ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.APPS }}:${{ github.sha }}
