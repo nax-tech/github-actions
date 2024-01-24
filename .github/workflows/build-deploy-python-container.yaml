@@ -38,6 +38,7 @@ env:
   UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
   ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
   ARTIFACTORY_REGISTRY: ${{ inputs.ARTIFACTORY_REGISTRY }}
+  DOCKER_LOCATION: ${{ inputs.DOCKER_LOCATION }}
   INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
   AWS_REGION: ${{ inputs.AWS_REGION }}
@@ -83,7 +84,7 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.APPS }}:${{ github.sha }}
+          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_LOCATION}}/${{ inputs.APPS }}:${{ github.sha }}
 
       - name: Trigger Update Image Digest
         if: github.ref == 'refs/heads/main'
