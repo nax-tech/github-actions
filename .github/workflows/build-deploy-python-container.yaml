@@ -1,0 +1,86 @@
+name: Dev Build & Deploy
+
+on:
+  workflow_call:
+    secrets:
+      ARTIFACTORY_TOKEN:
+        required: true
+      ARTIFACTORY_USERNAME:
+        required: true
+      ARTIFACTORY_IDENTITY_TOKEN:
+        required: true
+      UPDATE_MANIFEST_TOKEN:
+        required: true
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+    inputs:
+      ARTIFACTORY_REGISTRY:
+        required: true
+        type: string
+      AWS_ACCOUNT_ID:
+        required: false
+        type: string
+      AWS_TFSTATE_BUCKET:
+        required: false
+        type: string
+      AWS_REGION:
+        required: false
+        type: string
+
+env:
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+  UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
+  ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
+  ARTIFACTORY_REGISTRY: ${{ inputs.ARTIFACTORY_REGISTRY }}
+  INPUT_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  AWS_DEFAULT_REGION: ${{ inputs.AWS_REGION }}
+  AWS_REGION: ${{ inputs.AWS_REGION }}
+  AWS_DEFAULT_OUTPUT: json
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.8' # Specify your Python version
+
+      - name: Install Poetry
+        run: |
+          pip install poetry
+
+      - name: Install dependencies
+        run: |
+          poetry install
+
+      - name: Test
+        run: |
+          poetry run pytest # or any other command to run your tests
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ inputs.ARTIFACTORY_REGISTRY }}/my-python-app:${{ github.sha }} .
+
+      - name: Login to Artifactory Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ inputs.ARTIFACTORY_REGISTRY }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+
+      - name: Push Docker Image
+        run: |
+          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/my-python-app:${{ github.sha }}
+
+      - name: Cleanup
+        if: always()
+        run: docker rmi ${{ inputs.ARTIFACTORY_REGISTRY }}/my-python-app:${{ github.sha }}
