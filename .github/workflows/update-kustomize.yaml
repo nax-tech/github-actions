@@ -68,8 +68,8 @@ jobs:
       - name: Create backstage components for project
         run: |
           export RUNTIME_DIRECTORY="run-studio"
-          mkdir -p ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/run-studio
-          cd ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/run-studio
+          mkdir -p ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/catalog-info
+          cd ${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/catalog-info
           cat > catalog-info.yaml << EndOfMessage
           apiVersion: backstage.io/v1alpha1
           kind: Component
