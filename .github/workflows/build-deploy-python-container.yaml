@@ -79,7 +79,7 @@ jobs:
         run: |
           docker build -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}:${{ github.sha }} .
           echo "sha_var=${{ github.sha }}" >> $GITHUB_ENV
-          
+
       - name: Login to Artifactory Container Registry
         uses: docker/login-action@v2
         with:
@@ -109,7 +109,7 @@ jobs:
             -H "Authorization: token ${{ secrets.UPDATE_MANIFEST_TOKEN }}" \
             ${{ vars.PLATFORM_DISPATCH_URL }} \
             --fail-with-body \
-            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"repository\": \"${GITHUB_REPOSITORY}\", \"directory_name\": \"$(basename ${GITHUB_REPOSITORY})\", \"environment_dir\": \"dev\", \"digest\": \"${{ digest }}\"}}"
+            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"repository\": \"${GITHUB_REPOSITORY}\", \"directory_name\": \"$(basename ${GITHUB_REPOSITORY})\", \"environment_dir\": \"dev\", \"digest\": \"${{ steps.get_digest.outputs.digest }}\"}}"
 
       - name: Cleanup
         if: always()
