@@ -79,6 +79,7 @@ jobs:
         run: |
           docker build -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}:${{ github.sha }} .
           echo "sha_var=${{ github.sha }}" >> $GITHUB_ENV
+          
       - name: Login to Artifactory Container Registry
         uses: docker/login-action@v2
         with:
