@@ -96,6 +96,7 @@ jobs:
       - name: Get Image Digest
         id: get_digest
         run: |
+          echo "${{ steps.docker_push.outputs.push_output }}"
           DIGEST=$(echo "${{ steps.docker_push.outputs.push_output }}" | grep 'digest: ' | awk '{print $2}')
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
           echo "::set-output name=digest::$DIGEST"
