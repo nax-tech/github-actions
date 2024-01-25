@@ -89,13 +89,13 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}:${{ github.sha }}
-
+          PUSH_OUTPUT=$(docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}:${{ github.sha }} | tee /dev/tty)
+          echo "::set-output name=push_output::$PUSH_OUTPUT"
       - name: Get Image Digest
         id: get_digest
         run: |
-          DIGEST=$(docker inspect --format='{{index .RepoDigests 0}}' ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}:${{ github.sha }})
-          echo "digest=$DIGEST" >> $GITHUB_ENV
+          DIGEST=$(echo "${{ steps.docker_push.outputs.push_output }}" | grep 'digest: ' | awk '{print $2}')
+          echo "DIGEST=$DIGEST" >> $GITHUB_ENV
           echo "::set-output name=digest::$DIGEST"
           
       - name: Trigger Update Image Digest
