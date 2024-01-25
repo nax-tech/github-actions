@@ -89,8 +89,10 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          PUSH_OUTPUT=$(docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}:${{ github.sha }} | tee /dev/tty)
+          PUSH_OUTPUT=$(docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}:${{ github.sha }})
+          echo "$PUSH_OUTPUT"
           echo "::set-output name=push_output::$PUSH_OUTPUT"
+
       - name: Get Image Digest
         id: get_digest
         run: |
