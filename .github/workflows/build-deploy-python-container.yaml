@@ -117,4 +117,4 @@ jobs:
 
       - name: Cleanup
         if: always()
-        run: docker rmi ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}:${{ github.sha }}
+        run: docker rmi ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}-server:${{ github.sha }}
