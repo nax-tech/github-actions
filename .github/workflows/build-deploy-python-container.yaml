@@ -96,7 +96,7 @@ jobs:
       - name: Get Image Digest
         id: get_digest
         run: |
-          FULL_DIGEST=$(docker image inspect ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}:${{ github.sha }} --format='{{index .RepoDigests 0}}')
+          FULL_DIGEST=$(docker image inspect ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}-server:${{ github.sha }} --format='{{index .RepoDigests 0}}')
           echo "FULL_DIGEST=$FULL_DIGEST" 
           DIGEST=${FULL_DIGEST#*@}
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
