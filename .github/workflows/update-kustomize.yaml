@@ -78,6 +78,7 @@ jobs:
             annotations:
               argocd/app-selector: naxgrp.com/app=${{ github.event.client_payload.directory_name }}
               github.com/project-slug: ${{github.repository_owner}}/${{ github.event.client_payload.directory_name }}
+              backstage.io/kubernetes-namespace: ${{ github.event.client_payload.directory_name }}
             description: ${{ github.event.client_payload.directory_name }}
             name: ${{ github.event.client_payload.directory_name }}
           spec:
