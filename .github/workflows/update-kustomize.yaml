@@ -42,7 +42,6 @@ jobs:
           fi
           kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{github.repository_owner}}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
           kustomize edit set annotation meta.naxgrp.com/github-repository:${{github.event.client_payload.repository}}
-          echo github-workflow-run-id:${{github.run_id}}-${{github.run_attempt}} > workflow-run-id
           git add .
 
       - name: Update image digest for Run Studio Managed Clusters (via HTTPS Auth)
@@ -64,7 +63,6 @@ jobs:
           fi
           kustomize edit set image ${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server=naxgrp.jfrog.io/${{github.repository_owner}}-docker-local/applications/${{ github.event.client_payload.image_name || github.event.client_payload.directory_name }}-server@${{ github.event.client_payload.digest }}
           kustomize edit set annotation meta.naxgrp.com/github-repository:${{github.event.client_payload.repository}}
-          kustomize edit set annotation meta.naxgrp.com/github-workflow-run-id:${{github.run_id}}-${{github.run_attempt}}
           git add .
       - name: Create backstage components for project
         run: |
