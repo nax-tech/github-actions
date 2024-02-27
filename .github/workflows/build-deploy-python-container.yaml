@@ -52,7 +52,7 @@ jobs:
   build-and-publish:
     runs-on: ubuntu-latest
     outputs:
-      digest: ${{ steps.docker_build.outputs.digest }}      
+      digest: ${{ steps.docker_build.outputs.digest }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -62,7 +62,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: '3.11' # Specify your Python version
+          python-version: "3.11" # Specify your Python version
 
       - name: Install Poetry
         run: |
@@ -72,6 +72,7 @@ jobs:
         run: |
           poetry lock --no-update
           poetry install
+          poetry update
 
       # - name: Test
       #   run: |
@@ -104,7 +105,7 @@ jobs:
           DIGEST=${FULL_DIGEST#*@}
           echo "DIGEST=$DIGEST" >> $GITHUB_ENV
           echo "::set-output name=digest::$DIGEST"
-          
+
       - name: Trigger Update Image Digest
         if: github.ref == 'refs/heads/main'
         run: |
