@@ -75,7 +75,7 @@ jobs:
         uses: docker/metadata-action@v4
         with:
           images: |
-            naxgrp.jfrog.io/${{ vars.TF_VAR_JV_PROJECT }}-${{ vars.TF_VAR_JV }}-docker-local/applications/${{ github.event.repository.name }}-server
+            naxgrp.jfrog.io/${{ vars.TF_VAR_JV_PROJECT }}-${{ vars.TF_VAR_JV_NAME }}-docker-local/applications/${{ github.event.repository.name }}-server
           tags: |
             type=raw,value=${{ steps.TAG.outputs.tag_name }}
             type=ref,event=branch
