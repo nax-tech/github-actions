@@ -102,7 +102,7 @@ jobs:
         id: mvn_build
         run: |
           mkdir artifacts
-          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp.jfrog.io/nax-platform-docker/naxgrp/amazoncorretto:17-alpine3.17-3eb713f
+          mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp/amazoncorretto:17-alpine3.17-3eb713f
           # TEMP WORKAROUND from cnuss: Use Dockerhub
           # mvn -B deploy -Pdocker-deploy -Djib.from.image=naxgrp/amazoncorretto:17-alpine3.17-20240310
           mvn $MAVEN_CLI_OPTS org.apache.maven.plugins:maven-help-plugin:3.1.1:evaluate -Dexpression=project.version -q -DforceStdout > artifacts/version
