@@ -98,7 +98,7 @@ jobs:
             -H "Authorization: token ${{ secrets.UPDATE_MANIFEST_TOKEN }}" \
             ${{ vars.PLATFORM_DISPATCH_URL }} \
             --fail-with-body \
-            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"repository\": \"${GITHUB_REPOSITORY}\", \"directory_name\": \"kuberay\", \"environment_dir\": \"dev\", \"digest\": \"${{ steps.get_digest.outputs.digest }}\"}}"
+            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"repository\": \"${GITHUB_REPOSITORY}\", \"image_name"\: \"ray-inferences-server\", \"directory_name\": \"kuberay\", \"environment_dir\": \"dev\", \"digest\": \"${{ steps.get_digest.outputs.digest }}\"}}"
 
       - name: Cleanup
         if: always()
