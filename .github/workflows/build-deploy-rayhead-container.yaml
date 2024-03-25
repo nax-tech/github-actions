@@ -59,25 +59,6 @@ jobs:
         with:
           lfs: true
 
-      - name: Set up Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.8" # Specify your Python version
-
-      - name: Install Poetry
-        run: |
-          pip install poetry
-
-      - name: Install dependencies
-        run: |
-          poetry lock --no-update
-          poetry install
-          poetry update
-
-      # - name: Test
-      #   run: |
-      #     poetry run pytest # or any other command to run your tests
-
       - name: Build Docker Image
         id: docker_build
         run: |
@@ -117,7 +98,7 @@ jobs:
             -H "Authorization: token ${{ secrets.UPDATE_MANIFEST_TOKEN }}" \
             ${{ vars.PLATFORM_DISPATCH_URL }} \
             --fail-with-body \
-            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"repository\": \"${GITHUB_REPOSITORY}\", \"directory_name\": \"$(basename ${GITHUB_REPOSITORY})\", \"environment_dir\": \"dev\", \"digest\": \"${{ steps.get_digest.outputs.digest }}\"}}"
+            -d "{\"event_type\": \"update-digest\", \"client_payload\": {\"repository\": \"${GITHUB_REPOSITORY}\", \"directory_name\": \"kuberay\", \"environment_dir\": \"dev\", \"digest\": \"${{ steps.get_digest.outputs.digest }}\"}}"
 
       - name: Cleanup
         if: always()
