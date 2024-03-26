@@ -106,12 +106,12 @@ jobs:
         uses: mikefarah/yq@master
         with:
           cmd: |
-            yq -o=json -I=0 '
+            yq -I=0 '
               .subgraphs |= (with_entries(
                 .value.schema.file = "./subgraphs/" + .value.automation.file |
                 del(.value.automation)
               ) // {})
-            ' ./subgraphs/registry.yaml >> supergraph.yaml
+            ' ./subgraphs/registry.yaml > supergraph.yaml
 
       - name: Install Rover
         run: |
