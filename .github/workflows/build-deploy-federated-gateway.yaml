@@ -54,6 +54,14 @@ jobs:
           echo '${{ steps.create-subgraph-matrix.outputs.result }}' >> $GITHUB_OUTPUT
           echo "$EOF" >> $GITHUB_OUTPUT
 
+  test:
+    environment: dev
+    needs: find_subgraphs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Subgraph config
+        run: echo '${{ toJSON(needs.find_subgraphs.outputs.matrix) }}'
+
   collect_subgraphs:
     if: ${{ fromJSON(needs.find_subgraphs.outputs.matrix.include) != '[]' }}
     environment: dev
@@ -114,8 +122,6 @@ jobs:
                 del(.value.automation)
               ) // {})
             ' ./subgraphs/registry.yaml > supergraph.yaml
-
-      - run: cat supergraph.yaml
 
       - name: Install Rover
         run: |
