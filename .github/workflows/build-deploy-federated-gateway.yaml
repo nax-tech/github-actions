@@ -107,6 +107,7 @@ jobs:
         with:
           cmd: |
             yq '
+              . | ...comments="" |
               .subgraphs |= (with_entries(
                 .value.schema.file = "./subgraphs/" + .value.automation.file |
                 del(.value.automation)
