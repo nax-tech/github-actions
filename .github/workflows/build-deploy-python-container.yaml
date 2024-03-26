@@ -97,7 +97,7 @@ jobs:
 
       - name: Push Docker Image
         run: |
-          PUSH_OUTPUT=$(docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}-server:${{ github.sha }})
+          PUSH_OUTPUT=$(docker push ${{ inputs.ARTIFACTORY_REGISTRY }}/${{inputs.DOCKER_REPO}}/${{ inputs.APPS }}-server:latest
           echo "push_output $PUSH_OUTPUT"
           echo "::set-output name=push_output::$PUSH_OUTPUT"
 
