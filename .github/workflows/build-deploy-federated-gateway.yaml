@@ -38,7 +38,7 @@ jobs:
                 "branch": .value.automation.branch,
                 "file": .value.automation.file,
                 "repo": .key
-              })) // []) | {"include": .include}
+              }))) | {"include": .include}
             ' registry.yaml
 
       - uses: actions/upload-artifact@v3
@@ -60,10 +60,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Subgraph config
+        run: echo '${{ toJSON(needs.find_subgraphs.outputs.matrix) }}'
+      - name: Subgraph test
         run: echo '${{ toJSON(needs.find_subgraphs.outputs.matrix.include) }}'
 
   collect_subgraphs:
-    if: ${{ toJSON(needs.find_subgraphs.outputs.matrix.include) != 'null' }}
+    if: ${{ toJSON(needs.find_subgraphs.outputs.matrix.include) != null }}
     environment: dev
     needs: find_subgraphs
     runs-on: ubuntu-latest
