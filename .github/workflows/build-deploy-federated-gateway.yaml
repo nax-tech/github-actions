@@ -80,9 +80,8 @@ jobs:
           echo "Subgraph: [${{ matrix.file }}](https://github.com/${{ matrix.org }}/${{ matrix.repo }}/blob/${{ matrix.branch }}/${{ matrix.file }})" >> $GITHUB_STEP_SUMMARY
 
   build_supergraph:
-    needs:
-      - find_subgraphs
-      - collect_subgraphs
+    if: always()
+    needs: collect_subgraphs
     runs-on: ubuntu-latest
     outputs:
       digest: ${{ steps.build-push.outputs.digest }}
