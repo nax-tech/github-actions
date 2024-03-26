@@ -38,7 +38,7 @@ jobs:
                 "branch": .value.automation.branch,
                 "file": .value.automation.file,
                 "repo": .key
-              }))//[]) | {"include": .include}
+              }))) | {"include": .include}
             ' registry.yaml
 
       - uses: actions/upload-artifact@v3
