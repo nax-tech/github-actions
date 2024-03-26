@@ -41,6 +41,12 @@ jobs:
               }))//[]) | {"include": .include}
             ' registry.yaml
 
+      - uses: actions/upload-artifact@v3
+        with:
+          name: subgraphs
+          path: registry.yaml
+          if-no-files-found: error
+
       - name: Output subgraph config
         id: subgraph-matrix
         run: |
