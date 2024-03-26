@@ -63,7 +63,7 @@ jobs:
         run: echo '${{ toJSON(needs.find_subgraphs.outputs.matrix.include) }}'
 
   collect_subgraphs:
-    if: ${{ fromJSON(needs.find_subgraphs.outputs.matrix.include) != '[]' }}
+    if: ${{ toJSON(needs.find_subgraphs.outputs.matrix.include) != 'null' }}
     environment: dev
     needs: find_subgraphs
     runs-on: ubuntu-latest
