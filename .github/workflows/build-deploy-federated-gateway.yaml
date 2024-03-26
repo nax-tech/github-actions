@@ -31,7 +31,15 @@ jobs:
         uses: mikefarah/yq@master
         id: create-subgraph-matrix
         with:
-          cmd: yq -o=json -I=0 'with((.subgraphs.*);.automation.repo=key) | .include=[(.subgraphs.*).automation] | with_entries(select(.key=="include"))' registry.yaml
+          cmd: |
+            yq -o=json -I=0 '
+              .include = ((.subgraphs | to_entries | map({
+                "org": .value.automation.org,
+                "branch": .value.automation.branch,
+                "file": .value.automation.file,
+                "repo": .key
+              }))//[]) | {"include": .include}
+            ' registry.yaml
 
       - name: Output subgraph config
         id: subgraph-matrix
