@@ -55,6 +55,7 @@ jobs:
           echo "$EOF" >> $GITHUB_OUTPUT
 
   collect_subgraphs:
+    if: ${{ needs.find_subgraphs.outputs.matrix.include != '' }}
     environment: dev
     needs: find_subgraphs
     runs-on: ubuntu-latest
