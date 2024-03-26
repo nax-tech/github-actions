@@ -113,6 +113,8 @@ jobs:
               ) // {})
             ' ./subgraphs/registry.yaml > supergraph.yaml
 
+      - run: cat supergraph.yaml
+
       - name: Install Rover
         run: |
           curl -sSL https://rover.apollo.dev/nix/v0.13.0 | sh
