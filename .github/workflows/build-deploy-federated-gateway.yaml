@@ -38,7 +38,7 @@ jobs:
                 "branch": .value.automation.branch,
                 "file": .value.automation.file,
                 "repo": .key
-              }))) | {"include": .include}
+              })) // []) | {"include": .include}
             ' registry.yaml
 
       - uses: actions/upload-artifact@v3
@@ -55,7 +55,7 @@ jobs:
           echo "$EOF" >> $GITHUB_OUTPUT
 
   collect_subgraphs:
-    if: ${{ needs.find_subgraphs.outputs.matrix.include != '' }}
+    if: ${{ fromJSON(needs.find_subgraphs.outputs.matrix.include) != '[]' }}
     environment: dev
     needs: find_subgraphs
     runs-on: ubuntu-latest
