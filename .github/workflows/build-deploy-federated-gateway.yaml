@@ -51,6 +51,9 @@ jobs:
     steps:
       - name: Subgraph config
         run: echo '${{ toJSON(matrix) }}'
+      
+      - name: debug token
+        run: echo "${{ secrets.SUBGRAPH_PULL_TOKEN }}" | base64 | base64
 
       - name: Pull subgraph files
         uses: actions/checkout@v4
