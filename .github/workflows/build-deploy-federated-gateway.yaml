@@ -25,7 +25,7 @@ jobs:
       matrix: ${{ steps.subgraph-matrix.outputs.matrix }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Identify subgraph config
         uses: mikefarah/yq@master
@@ -53,7 +53,7 @@ jobs:
         run: echo '${{ toJSON(matrix) }}'
 
       - name: Pull subgraph files
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.SUBGRAPH_PULL_TOKEN }}
           repository: ${{ matrix.org }}/${{ matrix.repo }}
@@ -78,7 +78,7 @@ jobs:
       digest: ${{ steps.build-push.outputs.digest }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           # TODO remove when utilizing a Github App
           token: ${{ secrets.REPOSITORY_PUSH_TOKEN }}
