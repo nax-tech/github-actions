@@ -95,11 +95,11 @@ jobs:
 
       - name: Install Rover
         run: |
-          curl -sSL https://rover.apollo.dev/nix/v0.16.0 | sh
+          curl -sSL https://rover.apollo.dev/nix/v0.23.0 | sh
           echo "$HOME/.rover/bin" >> $GITHUB_PATH
 
       - name: Generate Rover Subgraph
-        run: rover supergraph  compose --schema-join-version v0.3 --elv2-license accept --config supergraph.yaml  > ./config/supergraph.graphql
+        run: rover supergraph  compose --federation_version=2 --elv2-license accept --config supergraph.yaml  > ./config/supergraph.graphql
 
       - name: Update git branch
         if: github.ref == 'refs/heads/main'
