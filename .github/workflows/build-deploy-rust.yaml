@@ -28,7 +28,7 @@ on:
         default: '.'
         required: false
       DOCKERFILE:
-        description: The path to the Dockerfile to build.
+        description: The absolute path to the Dockerfile to build.
         type: string
         default: './Dockerfile'
         required: false
