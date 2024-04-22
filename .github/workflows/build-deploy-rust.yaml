@@ -42,6 +42,11 @@ on:
         type: string
         required: false
         default: ''
+      DO_VERSION_BUMP:
+        description: A value indication whether to bump the version as the final step or not.
+        type: boolean
+        required: false
+        default: true
 
 env:
   CARGO_TERM_COLOR: always
@@ -131,11 +136,11 @@ jobs:
           git push origin ${{ steps.pkg-version.outputs.VERSION }}
 
       - name: Bump Version
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ inputs.DO_VERSION_BUMP && github.event_name != 'pull_request' }}
         run: cargo release version patch -x --no-confirm
 
       - name: Commit and Push
-        if: ${{ github.event_name != 'pull_request' }}
+        if: ${{ inputs.DO_VERSION_BUMP && github.event_name != 'pull_request' }}
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
