@@ -2,6 +2,9 @@ name: Build & Deploy (Rust Workspace)
 
 on:
   workflow_call:
+    outputs:
+      VERSION:
+        value: ${{ jobs.build.outputs.VERSION }}
     secrets:
       DOCKER_USERNAME:
         description: The username to use to authenticate with the Docker registry.
@@ -53,6 +56,8 @@ env:
 
 jobs:
   build:
+    outputs:
+      VERSION: ${{ steps.pkg-version.outputs.VERSION }}
     runs-on: ubuntu-latest
 
     steps:
