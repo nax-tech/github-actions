@@ -129,7 +129,7 @@ jobs:
       - name: Publish Crates
         if: ${{ github.event_name != 'pull_request' }}
         run: |
-          CRATES_TO_PUBLISH=$(echo '${{ inputs.CARGO_PACKAGES }}' | xargs -n1 -I% echo -n ' --package %')
+          CRATES_TO_PUBLISH=$(echo '${{ inputs.CARGO_PACKAGES }}' | xargs -n1 echo -n ' --package')
           cargo release publish $CRATES_TO_PUBLISH --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} --no-confirm --no-verify --execute
 
       - name: Tag and Push
