@@ -72,7 +72,7 @@ jobs:
       - name: Setup NodeJS 18
         uses: actions/setup-node@v1
         with:
-          node-version: 18
+          node-version: 21
 
       - name: Install pnpm
         run: npm install -g pnpm
