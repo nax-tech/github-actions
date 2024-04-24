@@ -75,8 +75,9 @@ jobs:
           node-version: 21
 
       - name: Install pnpm
-        run: npm install -g pnpm
-
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
       - name: Get pnpm cache directory path
         id: pnpm-cache-dir-path
         run: echo "::set-output name=dir::$(pnpm config get cacheFolder)"
