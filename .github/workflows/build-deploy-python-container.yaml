@@ -75,7 +75,7 @@ jobs:
       - name: Build Docker Image
         id: docker_build
         run: |
-          docker build -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}-server:${{ github.sha }} -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}-server:latest --build-arg ${{ secrets.ARTIFACTORY_USERNAME }} --build-arg ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }} .
+          docker build -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}-server:${{ github.sha }} -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}-server:latest --build-arg pypi_username=${{ secrets.ARTIFACTORY_USERNAME }} --build-arg pypi_password=${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }} .
           echo "sha_var=${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Login to Artifactory Container Registry
