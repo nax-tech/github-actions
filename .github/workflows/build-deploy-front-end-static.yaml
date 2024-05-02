@@ -99,6 +99,8 @@ jobs:
           done
 
       - name: Deploy
+        env:
+          INPUT_PLATFORMS: linux/amd64,linux/arm64
         run: |
           for APP in $AFFECTED_APPS
           do
