@@ -62,7 +62,7 @@ jobs:
       - name: Build Docker Image
         id: docker_build
         run: |
-          docker build -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}-server:${{ github.sha }} .
+          docker build --build-arg ARTIFACTORY_USERNAME=${{ secrets.ARTIFACTORY_USERNAME }} --build-arg ARTIFACTORY_IDENTITY_TOKEN=${{ secrets.ARTIFACTORY_TOKEN }} -t ${{ inputs.ARTIFACTORY_REGISTRY }}/${{ inputs.DOCKER_REPO }}/${{ inputs.APPS }}-server:${{ github.sha }} .
           echo "sha_var=${{ github.sha }}" >> $GITHUB_ENV
 
       - name: Login to Artifactory Container Registry
