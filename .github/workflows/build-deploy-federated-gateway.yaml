@@ -83,6 +83,14 @@ jobs:
           # TODO remove when utilizing a Github App
           token: ${{ secrets.REPOSITORY_PUSH_TOKEN }}
 
+      # Required for Multi-arch builds
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      ##########
+
       - uses: actions/download-artifact@v3
         with:
           name: subgraphs
@@ -134,7 +142,7 @@ jobs:
         id: build-push
         with:
           context: .
-          platforms: linux/amd64
+          platforms: linux/amd64,linux/arm64
           pull: true
           push: true
           tags: ${{ steps.meta.outputs.tags }}
