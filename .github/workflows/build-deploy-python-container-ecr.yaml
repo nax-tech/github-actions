@@ -26,6 +26,10 @@ on:
         required: false
         type: string
 
+permissions:
+  id-token: write
+  contents: read
+
 env:
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
   ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
