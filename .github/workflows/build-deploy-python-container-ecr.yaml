@@ -40,6 +40,7 @@ env:
   AWS_DEFAULT_OUTPUT: json
 jobs:
   build-and-publish:
+    environment: dev
     runs-on: Large_AI_Runner
     outputs:
       digest: ${{ steps.build-push.outputs.digest }}
