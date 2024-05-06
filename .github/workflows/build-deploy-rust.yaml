@@ -130,11 +130,11 @@ jobs:
           echo "### Docker Tags" >> $GITHUB_STEP_SUMMARY
           echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Publish Crates
-        if: ${{ github.event_name != 'pull_request' }}
-        run: |
-          CRATES_TO_PUBLISH=$(echo '${{ inputs.CARGO_PACKAGES }}' | xargs -n1 echo -n ' --package')
-          cargo release publish $CRATES_TO_PUBLISH --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} --no-confirm --no-verify --execute
+      # - name: Publish Crates
+      #   if: ${{ github.event_name != 'pull_request' }}
+      #   run: |
+      #     CRATES_TO_PUBLISH=$(echo '${{ inputs.CARGO_PACKAGES }}' | xargs -n1 echo -n ' --package')
+      #     cargo release publish $CRATES_TO_PUBLISH --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} --no-confirm --no-verify --execute
 
       - name: Tag and Push
         if: ${{ github.event_name != 'pull_request' }}
