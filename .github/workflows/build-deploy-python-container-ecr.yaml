@@ -88,17 +88,12 @@ jobs:
           registry: ${{ inputs.ARTIFACTORY_REGISTRY }}
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
-
-
-      - name: Configure AWS credentials for shared services account
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v3
         with:
-          # v4 control plane migration...
-          # if AWS_STATE_ACCOUNT_ID does not exist, go create it
-          # copy the value of AWS_ACCOUNT_ID from Organization-level variables
           role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/GithubActionsInfraRole
+          role-session-name: docker-build
           aws-region: us-west-2
-
       - uses: aws-actions/amazon-ecr-login@v1
       - uses: int128/create-ecr-repository-action@v1
         id: ecr
