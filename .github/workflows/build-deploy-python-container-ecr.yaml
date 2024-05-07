@@ -88,6 +88,8 @@ jobs:
           registry: ${{ inputs.ARTIFACTORY_REGISTRY }}
           username: ${{ secrets.ARTIFACTORY_USERNAME }}
           password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
+      - name: Set up environment variable
+        run: echo "REPO_NAME=$(basename ${GITHUB_REPOSITORY})" >> $GITHUB_ENV
       - name: configure aws credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
@@ -98,7 +100,7 @@ jobs:
       - uses: int128/create-ecr-repository-action@v1
         id: ecr
         with:
-          repository: ${{ github.repository }}-server
+          repository: "${{ env.REPO_NAME }}-server"
       - uses: docker/metadata-action@v4
         id: metadata
         with:
