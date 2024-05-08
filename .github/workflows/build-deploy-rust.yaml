@@ -16,6 +16,11 @@ on:
         description: The token to use to authenticate with the Cargo registry.
         required: true
     inputs:
+      MODE:
+        description: Release or Debug mode
+        type: string
+        required: false
+        default: release
       DOCKER_REGISTRY:
         description: The hostname of the Docker registry as you would enter it for the `docker login` command.
         type: string
@@ -93,7 +98,12 @@ jobs:
       - name: Cargo build Release
         env:
           CARGO_INCREMENTAL: "1"
-        run: cargo build --release
+        run: |
+          if [ "${{ inputs.MODE }}" = "release" ]; then
+            cargo build --release
+          else
+            cargo build
+          fi
 
       - name: Get Package Version
         id: pkg-version
