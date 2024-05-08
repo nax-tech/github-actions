@@ -84,7 +84,12 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Login to Cargo Repository
-        run: cargo login --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} 'Bearer ${{ secrets.CARGO_TOKEN }}'
+        run: |
+          cargo login --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} 'Bearer ${{ secrets.CARGO_TOKEN }}'
+          cat > ~/.cargo/config.toml <<CONFIG
+          [registry]
+          global-credential-providers = ["cargo:token"]
+          CONFIG
 
       - name: Cache dependencies
         uses: Swatinem/rust-cache@v2.2.1
