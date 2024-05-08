@@ -41,10 +41,10 @@ on:
         type: string
 
 env:
-  ARTIFACTORY_USERNAME: ${{ secrets.TEMP_ARTIFACTORY_USERNAME }}
-  ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.TEMP_ARTIFACTORY_IDENTITY_TOKEN }}
+  ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+  ARTIFACTORY_IDENTITY_TOKEN: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
   UPDATE_MANIFEST_TOKEN: ${{ secrets.UPDATE_MANIFEST_TOKEN }}
-  ARTIFACTORY_TOKEN: ${{ secrets.TEMP_ARTIFACTORY_TOKEN }}
+  ARTIFACTORY_TOKEN: ${{ secrets.ARTIFACTORY_TOKEN }}
   REACT_APP_ENV: ${{ inputs.REACT_APP_ENV }}
   ARTIFACTORY_REGISTRY: ${{ inputs.ARTIFACTORY_REGISTRY }}
   CONTENTFUL_ACCESS_TOKEN: ${{ secrets.CONTENTFUL_ACCESS_TOKEN || '' }}
@@ -118,9 +118,9 @@ jobs:
       - name: Login to Artifactory Container Registry
         uses: docker/login-action@v2
         with:
-          registry: ${{ inputs.TEMP_ARTIFACTORY_REGISTRY }}
-          username: ${{ secrets.TEMP_ARTIFACTORY_USERNAME }}
-          password: ${{ secrets.TEMP_ARTIFACTORY_IDENTITY_TOKEN }}
+          registry: ${{ inputs.ARTIFACTORY_REGISTRY }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
 
       - name: Affected apps
         run: |
