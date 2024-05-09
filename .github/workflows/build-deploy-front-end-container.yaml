@@ -98,7 +98,7 @@ jobs:
 
       - name: Test
         run: |
-          RUN=CI pnpm nx affected:test --base=origin/main~1 --parallel 5 --coverage
+          RUN=CI pnpm nx affected:test --base=origin/main~1 --parallel 5 --coverage=false
           pnpm nx affected:lint --base=origin/main~1 --parallel 5
       
       - name: Archive code coverage results
