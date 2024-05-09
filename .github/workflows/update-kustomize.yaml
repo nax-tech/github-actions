@@ -83,13 +83,20 @@ jobs:
               backstage.io/kubernetes-namespace: ${{ github.event.client_payload.directory_name }}
               backstage.io/kubernetes-label-selector: naxgrp.com/app=${{ github.event.client_payload.directory_name }}
             description: ${{ github.event.client_payload.directory_name }}
-            name: ${{ github.event.client_payload.directory_name }}
+            name: ${{ github.event.client_payload.directory_name }}            
           spec:
             lifecycle: production
             owner: user:guest
             type: website
           EndOfMessage
           git add .
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: '${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/catalog-info/catalog-info.yaml'
+          propertyPath: "metadata.${{ github.event.client_payload.environment_dir }}Version"
+          value: ${{ github.event.client_payload.tag || github.event.client_payload.digest }}
+          commitChange: true
       - name: Commit Changes
         timeout-minutes: 1
         run: |
