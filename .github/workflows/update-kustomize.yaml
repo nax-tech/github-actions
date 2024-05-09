@@ -93,7 +93,7 @@ jobs:
       - name: Update values.yaml
         uses: fjogeleit/yaml-update-action@main
         with:
-          valueFile: '${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/catalog-info/catalog-info.yaml'
+          valueFile: '${{ github.workspace }}/run-studio/${{ github.event.client_payload.directory_name }}/catalog-info/catalog-info.yaml'
           propertyPath: "metadata.${{ github.event.client_payload.environment_dir }}Version"
           value: ${{ github.event.client_payload.tag || github.event.client_payload.digest }}
           commitChange: true
