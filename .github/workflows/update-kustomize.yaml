@@ -90,6 +90,18 @@ jobs:
             type: website
           EndOfMessage
           git add .
+      - name: Update values.yaml
+        uses: fjogeleit/yaml-update-action@main
+        with:
+          valueFile: 'run-studio/${{ github.event.client_payload.directory_name }}/catalog-info/catalog-info.yaml'
+          propertyPath: "metadata.${{ github.event.client_payload.environment_dir }}Version"
+          value: ${{ github.event.client_payload.tag || github.event.client_payload.digest }}
+          commitChange: true
+          createPR: false
+          updateFile: true
+          masterBranchName: main
+          branch: main
+          targetBranch: main
       - name: Commit Changes
         timeout-minutes: 1
         run: |
