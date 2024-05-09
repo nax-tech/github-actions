@@ -97,6 +97,7 @@ jobs:
           propertyPath: "metadata.${{ github.event.client_payload.environment_dir }}Version"
           value: ${{ github.event.client_payload.tag || github.event.client_payload.digest }}
           commitChange: false
+          updateFile: true
       - name: Commit Changes
         timeout-minutes: 1
         run: |
