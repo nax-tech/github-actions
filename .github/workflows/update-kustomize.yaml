@@ -94,7 +94,7 @@ jobs:
         uses: fjogeleit/yaml-update-action@main
         with:
           valueFile: '${{ github.workspace }}/${RUNTIME_DIRECTORY}/${{ github.event.client_payload.directory_name }}/catalog-info/catalog-info.yaml'
-          propertyPath: "metadata.${{ ${{ inputs.tag }} }}.Version"
+          propertyPath: "metadata.${{ github.event.client_payload.environment_dir }}Version"
           value: ${{ github.event.client_payload.tag || github.event.client_payload.digest }}
           commitChange: true
       - name: Commit Changes
