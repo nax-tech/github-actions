@@ -20,8 +20,6 @@ jobs:
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
 
     - name: Mirror to target repository
-      env:
-        NAX_TECH_PAT: ${{ secrets.NAX_TECH_PAT }}
       run: |
-        git remote add target https://${NAX_TECH_PAT}@github.com/nax-tech/github-actions.git
+        git remote add target https://github-actions:${{ secrets.NAX_TECH_PAT }}@github.com/nax-tech/github-actions.git
         git push --mirror target --force
