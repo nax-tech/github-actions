@@ -19,4 +19,4 @@ jobs:
             REMOTE: git@github.com:nax-tech/github-actions.git
             GIT_USERNAME: cnuss
             GIT_SSH_PRIVATE_KEY: ${{ secrets.NAX_TECH_SSH }}
-            GIT_SSH_NO_VERIFY_HOST: false
+            GIT_SSH_NO_VERIFY_HOST: true
