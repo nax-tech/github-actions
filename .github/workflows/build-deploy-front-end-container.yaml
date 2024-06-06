@@ -139,7 +139,8 @@ jobs:
             echo "------------------------------"
             echo "Trigger Update Image Digest..."
             echo "Github ref: ${{ github.ref }}"
-            ls node_modules/.cache/.nx-container
+            ls -al
+            ls ./node_modules/.cache/.nx-container
             echo "Image digest: $(cat .nx-container/$APP/digest)"
             echo ${{ vars.PLATFORM_DISPATCH_URL }}
             curl -X POST \
