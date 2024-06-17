@@ -68,21 +68,39 @@ jobs:
       - name: Build Storybook
         run: pnpm nx build storybook
 
-      - name: Prepare Pages
+      - name: Prepare Artifact
         run: |
           chmod +x .github/scripts/pages.sh
           ./.github/scripts/pages.sh
         shell: bash
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v2
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
+      - name: Login to Artifactory Container Registry
+        uses: docker/login-action@v2
         with:
-          # Upload entire repository
-          path: './ready'
+          registry: ${{ inputs.ARTIFACTORY_REGISTRY }}
+          username: ${{ secrets.ARTIFACTORY_USERNAME }}
+          password: ${{ secrets.ARTIFACTORY_IDENTITY_TOKEN }}
 
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v2
+      - name: Build and push docker image
+        id: build_image
+        env:
+          INPUT_PLATFORMS: linux/amd64,linux/arm64
+        run: |
+          pnpm nx deploy docs
+
+      # - name: Setup Pages
+      #   uses: actions/configure-pages@v3
+
+      # - name: Upload artifact
+      #   uses: actions/upload-pages-artifact@v1
+      #   with:
+      #     # Upload entire repository
+      #     path: './ready'
+
+      # - name: Deploy to GitHub Pages
+      #   id: deployment
+      #   uses: actions/deploy-pages@v2
