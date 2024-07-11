@@ -29,6 +29,9 @@ on:
         description: "Git Tag Name"
         value: ${{ jobs.tag_version.outputs.tag_name }}
 
+permissions:
+  contents: write
+
 env:
   NX_APP: ${{ inputs.NX_APP }}
   ARTIFACTORY_USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
