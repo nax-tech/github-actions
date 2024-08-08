@@ -98,7 +98,7 @@ jobs:
         uses: baptiste0928/cargo-install@v3
         with:
           crate: cargo-release
-          version: 0.25.10
+          version: 0.25.6
 
       - name: Cargo build Release
         env:
