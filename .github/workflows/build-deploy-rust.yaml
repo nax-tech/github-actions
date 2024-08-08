@@ -98,7 +98,7 @@ jobs:
         uses: baptiste0928/cargo-install@v3
         with:
           crate: cargo-release
-          version: 0.25.6
+          version: 0.25.10
 
       - name: Cargo build Release
         env:
@@ -160,7 +160,7 @@ jobs:
 
       - name: Bump Version
         if: ${{ inputs.DO_VERSION_BUMP && github.event_name != 'pull_request' }}
-        run: cargo release version patch -x --no-confirm
+        run: cargo release version patch -x --no-confirm --workspace
 
       - name: Commit and Push
         if: ${{ inputs.DO_VERSION_BUMP && github.event_name != 'pull_request' }}
