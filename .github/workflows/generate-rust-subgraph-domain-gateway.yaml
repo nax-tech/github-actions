@@ -4,10 +4,6 @@ on:
       APPLICATION_IMAGE:
         required: true
         type: string
-      MODE:
-        required: false
-        type: string
-        default: "release"
     secrets:
       SUBGRAPH_PULL_TOKEN:
         required: true
@@ -28,6 +24,9 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Ensure we have the latest code
+        run: git pull
+
       - name: Cache dependencies
         uses: Swatinem/rust-cache@v2.7.3
 
@@ -36,11 +35,7 @@ jobs:
         env:
           CARGO_INCREMENTAL: "1"
         run: |
-          if [ "${{ inputs.MODE }}" = "release" ]; then
-            cargo run --release schema > ${{ github.event.repository.name }}.graphql
-          else
-            cargo run schema > ${{ github.event.repository.name }}.graphql
-          fi
+          cargo run --release schema > ${{ github.event.repository.name }}.graphql
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "subgraph<<$EOF" >> $GITHUB_OUTPUT
           echo "$(cat './${{ github.event.repository.name }}.graphql')"  >> $GITHUB_OUTPUT
