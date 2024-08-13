@@ -197,5 +197,5 @@ jobs:
           # The cargo release beta command performs a commit for us but with a generic message.
           # So we amend the commit with a more descriptive message.
           NEW_VERSION=$(cargo xtask docker image version)
-          git commit --amend -m "Prepare next beta version $NEW_VERSION"
+          git commit --amend -m "Prepare version $NEW_VERSION"
           git push origin main
