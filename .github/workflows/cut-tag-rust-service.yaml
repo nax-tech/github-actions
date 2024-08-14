@@ -184,6 +184,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.tag.outputs.name }} # Publish crates for the version we just tagged
 
       - name: Cache dependencies
         uses: Swatinem/rust-cache@v2.7.3
@@ -217,7 +219,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.ref_name }}  # Include the commits we made as part of the previous job
+          ref: ${{ needs.tag.outputs.name }}
 
       - name: Cache dependencies
         uses: Swatinem/rust-cache@v2.7.3
