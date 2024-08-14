@@ -83,6 +83,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          shared-key: build
+
       - name: Login to Cargo Repository
         run: |
           cargo login --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} 'Bearer ${{ secrets.CARGO_TOKEN }}'
@@ -91,10 +96,6 @@ jobs:
           global-credential-providers = ["cargo:token"]
           CONFIG
 
-      - name: Cache dependencies
-        uses: Swatinem/rust-cache@v2.7.3
-        with:
-          shared-key: build
 
       - name: Install cargo-release
         uses: baptiste0928/cargo-install@v3
@@ -151,11 +152,32 @@ jobs:
           echo "${{ steps.meta.outputs.tags }}" >> $GITHUB_STEP_SUMMARY
           echo "```" >> $GITHUB_STEP_SUMMARY
 
+  publish-crates:
+    if: github.ref_name == 'main'
+    # This job has been known to fail due to intermittent issues. We continue on error to avoid blocking the pipeline.
+    # Having it as a separate job in the workflow allows us to rerun just this job if it fails.
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          shared-key: build
+
+      - name: Install cargo-release
+        uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-release
+          version: 0.25.10
+
       - name: Publish Crates
-        if: ${{ github.ref_name == 'main' }}
         run: |
           CRATES_TO_PUBLISH=$(echo '${{ inputs.CARGO_PACKAGES }}' | xargs -n1 echo -n ' --package')
-          cargo release publish $CRATES_TO_PUBLISH --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} --no-confirm --no-verify -v --execute
+          cargo release publish $CRATES_TO_PUBLISH --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} --no-confirm --no-verify --execute
 
   trigger-cd:
     if: github.ref_name == 'main'

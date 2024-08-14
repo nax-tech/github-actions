@@ -87,6 +87,11 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          shared-key: build
+
       - name: Login to Cargo Repository
         run: |
           cargo login --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} 'Bearer ${{ secrets.CARGO_TOKEN }}'
@@ -94,11 +99,6 @@ jobs:
           [registry]
           global-credential-providers = ["cargo:token"]
           CONFIG
-
-      - name: Cache dependencies
-        uses: Swatinem/rust-cache@v2.7.3
-        with:
-          shared-key: build
 
       - name: Install cargo-release
         uses: baptiste0928/cargo-install@v3
@@ -117,7 +117,8 @@ jobs:
           # So we amend the commit with a more descriptive message.
           NEW_VERSION=$(cargo xtask docker image version)
           git commit --amend -m "Prepare release $NEW_VERSION"
-          git push origin "v$NEW_VERSION"
+          git push origin "+v$NEW_VERSION"  # Use `+` to overwrite the tag if it already exists. Usually from failed previous runs.
+          git push origin main
 
           echo "value=$NEW_VERSION" >> $GITHUB_OUTPUT
           echo "name=v$NEW_VERSION" >> $GITHUB_OUTPUT
@@ -157,12 +158,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-
-      - name: Publish Crates
-        if: ${{ github.ref_name == 'main' }}
-        run: |
-          CRATES_TO_PUBLISH=$(echo '${{ inputs.CARGO_PACKAGES }}' | xargs -n1 echo -n ' --package')
-          cargo release publish $CRATES_TO_PUBLISH --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} --no-confirm --execute
         
       - name: Record Summary
         run: |
@@ -186,6 +181,33 @@ jobs:
           body: |
             Rust Application version: `${{ steps.tag.outputs.value }}`
             Docker image digest: `${{ steps.docker_build.outputs.digest }}`
+
+  publish-crates:
+    if: github.ref_name == 'main'
+    # This job has been known to fail due to intermittent issues. We continue on error to avoid blocking the pipeline.
+    # Having it as a separate job in the workflow allows us to rerun just this job if it fails.
+    continue-on-error: true
+    runs-on: ubuntu-latest
+    needs: tag
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        uses: Swatinem/rust-cache@v2.7.3
+        with:
+          shared-key: build
+
+      - name: Install cargo-release
+        uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-release
+          version: 0.25.10
+
+      - name: Publish Crates
+        run: |
+          CRATES_TO_PUBLISH=$(echo '${{ inputs.CARGO_PACKAGES }}' | xargs -n1 echo -n ' --package')
+          cargo release publish $CRATES_TO_PUBLISH --registry ${{ inputs.CARGO_REGISTRY_ALIAS }} --no-confirm --no-verify --execute
 
   bump-version:
     if: github.ref_name == 'main'
