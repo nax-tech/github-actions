@@ -29,6 +29,8 @@ jobs:
 
       - name: Cache dependencies
         uses: Swatinem/rust-cache@v2.7.3
+        with:
+          shared-key: build
 
       - name: Generate Subgraph
         id: generate_subgraph
